@@ -1,0 +1,69 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Images\Delete-Icon-16px.png" />
+    <None Remove="Images\Icons\ContainersView\Delete-Icon-32px.png" />
+    <None Remove="Images\Icons\ContainersView\Plus-Icon-32px.png" />
+    <None Remove="Images\Icons\ContainersView\Update-Icon-32px.png" />
+    <None Remove="Images\Icons\Global\Search-Icon-32px.png" />
+    <None Remove="Images\Icons\Global\Search-white-Icon-32px.png" />
+    <None Remove="Images\Icons\MainWindow\Conteiner-Icon-32px.png" />
+    <None Remove="Images\Icons\MainWindow\Exit-Icon-32px.png" />
+    <None Remove="Images\Icons\MainWindow\Home-Icon-32px.png" />
+    <None Remove="Images\Icons\MainWindow\Log-In-Icon-32px.png" />
+    <None Remove="Images\Icons\MainWindow\Route-Icon-32px.png" />
+    <None Remove="Images\Icons\MainWindow\Ship-Icon-32px.png" />
+    <None Remove="Images\Icons\MainWindow\Truck-Icon-32px.png" />
+    <None Remove="Images\New_Logo_PortBridge_Shipping.png" />
+    <None Remove="Images\Plus-Icon-16px.png" />
+    <None Remove="Images\Update-Icon-16px.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Catel.MVVM" Version="6.2.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.5.1" />
+    <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-rc6.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.11">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.11">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\Icons\ContainersView\Delete-Icon-32px.png" />
+    <Resource Include="Images\Icons\ContainersView\Plus-Icon-32px.png" />
+    <Resource Include="Images\Icons\ContainersView\Update-Icon-32px.png" />
+    <Resource Include="Images\Icons\Global\Search-Icon-32px.png" />
+    <Resource Include="Images\Icons\Global\Search-white-Icon-32px.png" />
+    <Resource Include="Images\Icons\MainWindow\Conteiner-Icon-32px.png" />
+    <Resource Include="Images\Icons\MainWindow\Exit-Icon-32px.png" />
+    <Resource Include="Images\Icons\MainWindow\Home-Icon-32px.png" />
+    <Resource Include="Images\Icons\MainWindow\Log-In-Icon-32px.png" />
+    <Resource Include="Images\Icons\MainWindow\Route-Icon-32px.png" />
+    <Resource Include="Images\Icons\MainWindow\Ship-Icon-32px.png" />
+    <Resource Include="Images\Icons\MainWindow\Truck-Icon-32px.png" />
+    <Resource Include="Images\Logo\New_Logo_PortBridge_Shipping.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="MVVM\Models\" />
+    <Folder Include="Themes\" />
+  </ItemGroup>
+
+</Project>
