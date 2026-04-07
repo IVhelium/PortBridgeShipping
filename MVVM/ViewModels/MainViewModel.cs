@@ -1,12 +1,116 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PortBridgeShipping.Core;
 
 namespace PortBridgeShipping.MVVM.ViewModels
 {
-    internal class MainViewModel
+    public class MainViewModel : ObservableObject
     {
+        #region Commands
+
+        public RelayCommand HomeViewCommand { get; set; }
+        public RelayCommand ContainersViewCommand { get; set; }
+        public RelayCommand ShipsViewCommand { get; set; }
+        public RelayCommand TrucksViewCommand { get; set; }
+        public RelayCommand RoutesViewCommand { get; set; }
+        public RelayCommand LogInViewCommad { get; set; }
+
+        #endregion
+
+
+        #region Views
+        
+        public HomeViewModel HomeVM { get; set; }
+        public ContainersViewModel ContainersVM { get; set; }
+        public ShipsViewModel ShipsVM { get; set; }
+        public TrucksViewModel TrucksVM { get; set; }
+        public RoutesViewModel RoutesVM { get; set; }
+        public LogInViewModel LogInVM { get; set; }
+
+        #endregion
+
+
+        #region Properties
+
+        // Title switching property
+        private string? _title;
+
+        public string? Title
+        {
+            get { return _title; }
+            set
+            {
+                _title = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // View switching property
+        private object? _currentView;
+
+        public object? CurrentView
+        {
+            get { return _currentView; }
+            set
+            {
+                _currentView = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #endregion
+
+        public MainViewModel()
+        {
+            HomeVM = new HomeViewModel();
+            ContainersVM = new ContainersViewModel();
+            ShipsVM = new ShipsViewModel();
+            TrucksVM = new TrucksViewModel();
+            RoutesVM = new RoutesViewModel();
+            LogInVM = new LogInViewModel();
+
+
+            CurrentView = HomeVM;   // Set initial page
+            Title = "Welcome to Port Bridge Shipping";
+
+
+            #region Initialize commands to switch views
+
+            HomeViewCommand = new RelayCommand(obj =>
+            {
+                CurrentView = HomeVM;
+                Title = "Home";
+            });
+
+            ContainersViewCommand = new RelayCommand(obj =>
+            {
+                CurrentView = ContainersVM;
+                Title = "Containers Menegment";
+            });
+
+            ShipsViewCommand = new RelayCommand(obj =>
+            {
+                CurrentView = ShipsVM;
+                Title = "Ships Menegment";
+            });
+
+            TrucksViewCommand = new RelayCommand(obj =>
+            {
+                CurrentView = TrucksVM;
+                Title = "Trucks Menegment";
+            });
+
+            RoutesViewCommand = new RelayCommand(obj =>
+            {
+                CurrentView = RoutesVM;
+                Title = "Routes Menegment";
+            });
+
+            LogInViewCommad = new RelayCommand(obj =>
+            {
+                CurrentView = LogInVM;
+                Title = "Log In";
+            });
+
+            #endregion
+        }
     }
 }

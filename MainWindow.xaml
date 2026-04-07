@@ -4,8 +4,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PortBridgeShipping"
+        xmlns:viewModel="clr-namespace:PortBridgeShipping.MVVM.ViewModels"
+        xmlns:core="clr-namespace:PortBridgeShipping.Core"
+        xmlns:corProp="clr-namespace:PortBridgeShipping.Core.DependencyProperties"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Height="750"
+        Width="1420"
+        MinHeight="500"
+        MinWidth="900"
+        WindowStyle="None"
+        ResizeMode="CanResize"
+        Background="#c8b2d4"
+        UseLayoutRounding="True">
+
+    
+    
     <Grid>
 
     </Grid>

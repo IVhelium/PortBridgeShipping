@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PortBridgeShipping.MVVM.ViewModels
 {
-    internal class TrucksViewModel
+    public class TrucksViewModel
     {
     }
 }
