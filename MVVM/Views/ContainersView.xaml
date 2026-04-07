@@ -46,19 +46,6 @@
                              Style="{StaticResource SearchBoxTheme}"
                              coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Search-white-Icon-32px.png"
                              x:Name="TextBox_Search" />
-
-                    <!--<CheckBox Grid.Column="0" 
-                           Grid.Row="0"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Right"
-                           Foreground="White"
-                           Cursor="Hand"
-                           Content="Search"
-                           IsChecked="False"
-                           Click="CheckBox_Search_IsChecked"
-                           x:Name="CheckBox_Search"/>-->
-
-
                 </StackPanel>
 
                 <DataGrid Grid.Column="0"

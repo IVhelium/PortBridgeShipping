@@ -21,10 +21,8 @@
     <Window.DataContext>
         <viewModel:MainViewModel />
     </Window.DataContext>
-    
-    <!-- DataContext for UserControls -->
+
     <Window.Resources>
-        <!-- User Controls DataTemplates -->
         <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
             <view:HomeView />
         </DataTemplate>
@@ -45,7 +43,7 @@
         </DataTemplate>
     </Window.Resources>
 
-    <Grid Background="#c8b2d4">
+        <Grid Background="#c8b2d4">
         
         <!-- Menu Columns and Rows Definition  -->
         <Grid.ColumnDefinitions>

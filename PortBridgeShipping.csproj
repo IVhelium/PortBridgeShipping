@@ -61,8 +61,4 @@
     <Resource Include="Images\Logo\New_Logo_PortBridge_Shipping.png" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Themes\DefaultThemes\" />
-  </ItemGroup>
-
 </Project>
