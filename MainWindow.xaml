@@ -5,10 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PortBridgeShipping"
         xmlns:viewModel="clr-namespace:PortBridgeShipping.MVVM.ViewModels"
+        xmlns:view="clr-namespace:PortBridgeShipping.MVVM.Views"
         xmlns:core="clr-namespace:PortBridgeShipping.Core"
-        xmlns:corProp="clr-namespace:PortBridgeShipping.Core.DependencyProperties"
+        xmlns:coreProp="clr-namespace:PortBridgeShipping.Core.DependencyProperties"
         mc:Ignorable="d"
-        Height="750"
+        Height="740"
         Width="1420"
         MinHeight="500"
         MinWidth="900"
@@ -17,9 +18,172 @@
         Background="#c8b2d4"
         UseLayoutRounding="True">
 
+    <Window.DataContext>
+        <viewModel:MainViewModel />
+    </Window.DataContext>
     
-    
-    <Grid>
+    <!-- DataContext for UserControls -->
+    <Window.Resources>
+        <!-- User Controls DataTemplates -->
+        <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
+            <view:HomeView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:ContainersViewModel}">
+            <view:ContainersView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:ShipsViewModel}">
+            <view:ShipsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:TrucksViewModel}">
+            <view:TrucksView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:RoutesViewModel}">
+            <view:RoutesView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:LogInViewModel}">
+            <view:LogInView />
+        </DataTemplate>
+    </Window.Resources>
 
+    <Grid Background="#c8b2d4">
+        
+        <!-- Menu Columns and Rows Definition  -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <!-- Title and Exit Button Definition -->
+        <Grid Grid.Column="1"
+              Grid.Row="0"
+              Panel.ZIndex="1">
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="60" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Title -->
+            <TextBlock Grid.Row="0"
+                       Text="{Binding Title}"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       Foreground="White" />
+
+            <Image Grid.Column="1"
+                   x:Name="lblClose"
+                   Width="32"
+                   Source="/Images/Icons/MainWindow/Exit-Icon-32px.png"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   MouseLeftButtonDown="lblClose_MouseLeftButtonDown"
+                   Cursor="Hand" />
+        </Grid>
+
+        <Grid Grid.Column="0"
+              Grid.ColumnSpan="2"
+              Grid.Row="0"
+              Background="#a085a6" />
+
+        <!-- Logo Section -->
+        <Image Grid.Column="0"
+               Grid.Row="0"
+               Source="/Images/Logo/New_Logo_PortBridge_Shipping.png"
+               Panel.ZIndex="1" />
+
+        <!-- Menu Section -->
+        <Grid Grid.Column="0"
+              Grid.Row="1"
+              Background="#BBA9C9">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="65*" />
+                <RowDefinition Height="35*" />
+            </Grid.RowDefinitions>
+
+            <DockPanel Grid.Row="0">
+                <RadioButton Content="Home"
+                             Height="45"
+                             DockPanel.Dock="Top"
+                             Foreground="White"
+                             FontSize="16"
+                             IsChecked="True"
+                             Style="{StaticResource MenuButtonTheme}"
+                             Command="{Binding HomeViewCommand}"
+                             GroupName="Menu_Radio_Btn"
+                             coreProp:ImageIconProperties.IconSource="/Images/Icons/MainWindow/Home-Icon-32px.png" />
+
+                <RadioButton Content="Conteiners"
+                             Height="45"
+                             DockPanel.Dock="Top"
+                             Foreground="White"
+                             FontSize="16"
+                             Style="{StaticResource MenuButtonTheme}"
+                             Command="{Binding ContainersViewCommand}"
+                             GroupName="Menu_Radio_Btn"
+                             coreProp:ImageIconProperties.IconSource="/Images/Icons/MainWindow/Conteiner-Icon-32px.png" />
+
+                <RadioButton Content="Ships"
+                             Height="45"
+                             DockPanel.Dock="Top"
+                             Foreground="White"
+                             FontSize="16"
+                             Style="{StaticResource MenuButtonTheme}"
+                             Command="{Binding ShipsViewCommand}"
+                             GroupName="Menu_Radio_Btn"
+                             coreProp:ImageIconProperties.IconSource="/Images/Icons/MainWindow/Ship-Icon-32px.png" />
+
+                <RadioButton Content="Trucks"
+                             Height="45"
+                             DockPanel.Dock="Top"
+                             Foreground="White"
+                             FontSize="16"
+                             Style="{StaticResource MenuButtonTheme}"
+                             Command="{Binding TrucksViewCommand}"
+                             GroupName="Menu_Radio_Btn"
+                             coreProp:ImageIconProperties.IconSource="/Images/Icons/MainWindow/Truck-Icon-32px.png" />
+
+                <RadioButton Content="Routes"
+                             Height="45"
+                             DockPanel.Dock="Top"
+                             Foreground="White"
+                             FontSize="16"
+                             Style="{StaticResource MenuButtonTheme}"
+                             Command="{Binding RoutesViewCommand}"
+                             GroupName="Menu_Radio_Btn"
+                             coreProp:ImageIconProperties.IconSource="/Images/Icons/MainWindow/Route-Icon-32px.png" />
+
+                <Label VerticalAlignment="Bottom"
+                       Height="1"
+                       Width="170"
+                       DockPanel.Dock="Bottom"
+                       Background="White"
+                       Margin="0, 0, 0, 2" />
+            </DockPanel>
+
+            <DockPanel Grid.Row="1">
+                <RadioButton Content="Log In"
+                             Height="45"
+                             VerticalAlignment="Top"
+                             Foreground="White"
+                             FontSize="16"
+                             Margin="0, 20, 0, 0"
+                             Style="{StaticResource MenuButtonTheme}"
+                             Command="{Binding LogInViewCommand}"
+                             GroupName="Menu_Radio_Btn"
+                             coreProp:ImageIconProperties.IconSource="/Images/Icons/MainWindow/Log-In-Icon-32px.png" />
+            </DockPanel>
+        </Grid>
+
+        <!-- Content Section -->
+        <ContentControl Grid.Column="1"
+                        Grid.Row="1"
+                        Margin="10,10,10,10"
+                        Content="{Binding CurrentView}" />
     </Grid>
 </Window>

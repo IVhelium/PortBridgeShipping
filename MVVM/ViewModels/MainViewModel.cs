@@ -11,7 +11,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
         public RelayCommand ShipsViewCommand { get; set; }
         public RelayCommand TrucksViewCommand { get; set; }
         public RelayCommand RoutesViewCommand { get; set; }
-        public RelayCommand LogInViewCommad { get; set; }
+        public RelayCommand LogInViewCommand { get; set; }
 
         #endregion
 
@@ -104,7 +104,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
                 Title = "Routes Menegment";
             });
 
-            LogInViewCommad = new RelayCommand(obj =>
+            LogInViewCommand = new RelayCommand(obj =>
             {
                 CurrentView = LogInVM;
                 Title = "Log In";

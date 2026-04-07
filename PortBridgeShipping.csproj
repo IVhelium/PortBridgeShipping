@@ -62,8 +62,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="MVVM\Models\" />
-    <Folder Include="Themes\" />
+    <Folder Include="Themes\DefaultThemes\" />
   </ItemGroup>
 
 </Project>

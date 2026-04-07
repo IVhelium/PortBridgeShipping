@@ -4,9 +4,203 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PortBridgeShipping.MVVM.Views"
+             xmlns:viewModel="clr-namespace:PortBridgeShipping.MVVM.ViewModels"
+             xmlns:coreProp="clr-namespace:PortBridgeShipping.Core.DependencyProperties"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+             d:DataContext="{d:DesignInstance Type=viewModel:ContainersViewModel}"
+             d:DesignHeight="640"
+             d:DesignWidth="1200">
+    <Border BorderBrush="LightGray"
+            BorderThickness="1">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="150" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Content Section -->
+            <Grid Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto"
+                                      MinWidth="200" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="65" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+
+                <!-- NavBar -->
+                <StackPanel Grid.Column="0"
+                            Grid.Row="0"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+
+                    <TextBox Grid.Column="0"
+                             Grid.Row="0"
+                             Width="200"
+                             Height="40"
+                             Text="Search"
+                             Style="{StaticResource SearchBoxTheme}"
+                             coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Search-white-Icon-32px.png"
+                             x:Name="TextBox_Search" />
+
+                    <!--<CheckBox Grid.Column="0" 
+                           Grid.Row="0"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"
+                           Foreground="White"
+                           Cursor="Hand"
+                           Content="Search"
+                           IsChecked="False"
+                           Click="CheckBox_Search_IsChecked"
+                           x:Name="CheckBox_Search"/>-->
+
+
+                </StackPanel>
+
+                <DataGrid Grid.Column="0"
+                          Grid.Row="1"
+                          Margin="15, 0, 15, 15"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          FontSize="13"
+                          CanUserResizeColumns="False"
+                          CanUserResizeRows="False"
+                          ItemsSource="{Binding Containers}"
+                          SelectedItem="{Binding SelectedContainer}"
+                          x:Name="DataGridView_Containers">
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Number"
+                                            Width="Auto"
+                                            MinWidth="150"
+                                            Binding="{Binding ContainerNumber}" />
+
+                        <DataGridTextColumn Header="Weight"
+                                            Width="Auto"
+                                            MinWidth="120"
+                                            Binding="{Binding ContainerWeight}" />
+
+                        <DataGridTextColumn Header="Type"
+                                            Width="Auto"
+                                            MinWidth="100"
+                                            Binding="{Binding ContainerType}" />
+
+                        <DataGridTextColumn Header="Status"
+                                            Width="Auto"
+                                            MinWidth="150"
+                                            Binding="{Binding Status.Name}" />
+
+                        <DataGridTextColumn Header="Route"
+                                            Width="*"
+                                            MinWidth="150"
+                                            Binding="{Binding Route.Display}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- Control Panel -->
+                <StackPanel Grid.Column="1"
+                            Grid.Row="1"
+                            Margin="0, 0, 15, 0"
+                            Orientation="Vertical">
+
+                    <TextBox Height="25"
+                             Text="{Binding Container.ContainerNumber, UpdateSourceTrigger=PropertyChanged}"
+                             Padding="5, 0"
+                             VerticalContentAlignment="Center"
+                             x:Name="TextBox_Number" />
+
+                    <TextBox Height="25"
+                             Text="{Binding Container.ContainerWeight, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="0, 20, 0, 0"
+                             Padding="5, 0"
+                             VerticalContentAlignment="Center"
+                             x:Name="TextBox_Weight" />
+
+                    <ComboBox Height="25"
+                              Text="Type"
+                              Margin="0, 20, 0, 0"
+                              Padding="5, 0"
+                              Background="White"
+                              VerticalContentAlignment="Center"
+                              ItemsSource="{Binding ContainerTypes}"
+                              SelectedItem="{Binding Container.ContainerType}"
+                              x:Name="ComboBox_Type">
+
+
+                    </ComboBox>
+
+                    <ComboBox Height="25"
+                              Text="Status"
+                              Margin="0, 20, 0, 0"
+                              Padding="5, 0"
+                              Background="White"
+                              VerticalContentAlignment="Center"
+                              ItemsSource="{Binding Statuses}"
+                              SelectedItem="{Binding Container.Status}"
+                              DisplayMemberPath="Name"
+                              x:Name="ComboBox_Status">
+
+
+                    </ComboBox>
+
+                    <ComboBox Height="25"
+                              Text="Route"
+                              Margin="0, 20, 0, 0"
+                              Padding="5, 0"
+                              Background="White"
+                              VerticalContentAlignment="Center"
+                              ItemsSource="{Binding Routes}"
+                              SelectedItem="{Binding Container.Route}"
+                              DisplayMemberPath="Display"
+                              x:Name="ComboBox_Route">
+
+
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
+
+            <!-- Buttons Section -->
+            <StackPanel Grid.Column="1"
+                        Orientation="Vertical"
+                        Background="#bba9c9">
+
+                <Button Content="Add"
+                        Height="35"
+                        FontSize="17"
+                        Foreground="White"
+                        Margin="0, 55, 0, 0"
+                        Style="{StaticResource DefaultButtonTheme}"
+                        coreProp:ImageIconProperties.IconSource="/Images/Icons/ContainersView/Plus-Icon-32px.png"
+                        Command="{Binding AddCommand}"
+                        CommandParameter="{Binding Container}"
+                        x:Name="Button_Add" />
+
+                <Button Content="Update"
+                        Height="35px"
+                        FontSize="17px"
+                        Foreground="White"
+                        Margin="0, 20, 0, 0"
+                        Style="{StaticResource DefaultButtonTheme}"
+                        coreProp:ImageIconProperties.IconSource="/Images/Icons/ContainersView/Update-Icon-32px.png"
+                        Command="{Binding UpdateCommand}"
+                        CommandParameter="{Binding SelectedContainer}"
+                        x:Name="Button_Update" />
+
+                <Button Content="Delete"
+                        Height="35"
+                        FontSize="17"
+                        Foreground="White"
+                        Margin="0, 20, 0, 0"
+                        Style="{StaticResource DefaultButtonTheme}"
+                        coreProp:ImageIconProperties.IconSource="/Images/Icons/ContainersView/Delete-Icon-32px.png"
+                        Command="{Binding RemoveCommand}"
+                        CommandParameter="{Binding SelectedContainer}"
+                        x:Name="Button_Delete" />
+            </StackPanel>
+        </Grid>
+    </Border>
 </UserControl>

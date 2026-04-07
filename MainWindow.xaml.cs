@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.VisualBasic.ApplicationServices;
 
 namespace PortBridgeShipping
 {
@@ -19,6 +20,20 @@ namespace PortBridgeShipping
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void lblClose_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            MessageBoxResult res = MessageBox.Show("Are you sure want to exit", "MESSAGE", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (res == MessageBoxResult.Yes)
+            {
+                Close();
+            }
+            else
+            {
+                return;
+            }
         }
     }
 }
