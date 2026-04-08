@@ -29,6 +29,7 @@
                                            Width="24" />
 
                                     <TextBox Grid.Column="1"
+                                             Text="{Binding Text, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                              VerticalAlignment="Center"
                                              Background="Transparent"
                                              Foreground="White"
@@ -46,7 +47,7 @@
                                                Panel.ZIndex="1"
                                                Margin="10, 0, 0, 0"
                                                Foreground="White"
-                                               FontFamily="/Fonts/#Cagliostro"
+                                               FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro"
                                                FontSize="14">
 
                                         <TextBlock.Style>

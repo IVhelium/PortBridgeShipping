@@ -1,6 +1,5 @@
 ﻿using Catel.Data;
 using PortBridgeShipping.Core.Collections.Enums;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace PortBridgeShipping.MVVM.Models
 {

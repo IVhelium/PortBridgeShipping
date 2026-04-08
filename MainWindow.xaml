@@ -11,10 +11,9 @@
         mc:Ignorable="d"
         Height="740"
         Width="1420"
-        MinHeight="500"
-        MinWidth="900"
+        MinHeight="550"
+        MinWidth="990"
         WindowStyle="None"
-        ResizeMode="CanResize"
         Background="#c8b2d4"
         UseLayoutRounding="True">
 

@@ -17,7 +17,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
 
         #region Views
-        
+
         public HomeViewModel HomeVM { get; set; }
         public ContainersViewModel ContainersVM { get; set; }
         public ShipsViewModel ShipsVM { get; set; }
