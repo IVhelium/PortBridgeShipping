@@ -6,6 +6,7 @@ using PortBridgeShipping.Core;
 using PortBridgeShipping.Core.Collections.Enums;
 using PortBridgeShipping.Core.Collections.Enums.Filters;
 using PortBridgeShipping.MVVM.Models;
+using PortBridgeShipping.Services;
 using Container = PortBridgeShipping.MVVM.Models.Container;
 
 namespace PortBridgeShipping.MVVM.ViewModels
@@ -32,24 +33,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
             ContainerTypes = Enum.GetValues<ContainerType>();
             Filters = Enum.GetValues<ContainerFilter>();
 
-
-
-            // Test Data
-            Statuses.Add(new Status { Id = 1, Name = "V puti" });
-            Statuses.Add(new Status { Id = 2, Name = "Na Sklade" });
-            Statuses.Add(new Status { Id = 3, Name = "Dostavlen" });
-
-            Routes.Add(new Route
-            {
-                Id = 1,
-                Name = "Europe -> Africa",
-                Segments =
-                [
-                    new RouteSegment { From = "Lisbon", To = "Madrid", Transport = TransportType.Truck, Order = 1 },
-                    new RouteSegment { From = "Madrid", To = "Port", Transport = TransportType.Truck, Order = 2 },
-                    new RouteSegment { From = "Port", To = "Egypt", Transport = TransportType.Ship, Order = 3 }
-                ]
-            });   
+            Containers = [];
         }
 
 
@@ -59,6 +43,15 @@ namespace PortBridgeShipping.MVVM.ViewModels
         public RelayCommand UpdateCommand { get; set; }
         public RelayCommand RemoveCommand { get; set; }
         public RelayCommand ClearCommand { get; set; }
+
+        #endregion
+
+
+        #region Services
+
+        private readonly ContainerService _containerService = new();
+        private readonly StatusService _statusService = new();
+        public readonly RouteService _routeService = new();
 
         #endregion
 

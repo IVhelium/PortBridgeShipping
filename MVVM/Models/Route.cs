@@ -1,4 +1,6 @@
-﻿using Catel.Data;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
+using Catel.Data;
 
 namespace PortBridgeShipping.MVVM.Models
 {
@@ -7,8 +9,8 @@ namespace PortBridgeShipping.MVVM.Models
         public int Id { get; set; }     // Auto-Increment
         public string Name { get; set; } = string.Empty;
 
-        // RouteSegment
-        public List<RouteSegment> Segments { get; set; } = new List<RouteSegment>();
+        public ObservableCollection<RouteSegment> Segments { get; set; } = new();   // RouteSegment
+        public ObservableCollection<Container> Containers { get; set; } = new();    // Containers
 
 
         // Validation
@@ -19,10 +21,23 @@ namespace PortBridgeShipping.MVVM.Models
 
             if (Segments == null || Segments.Count == 0)
                 validationResults.Add(FieldValidationResult.CreateError(nameof(Segments), "Route must have at least one segment"));
+
+
+            var sortedSegments = Segments?.OrderBy(seg => seg.Order).ToList();
+
+            for (int i = 1; i < sortedSegments?.Count; i++)
+            {
+                var currentSeg = sortedSegments[i];
+                var previousSeg = sortedSegments[i - 1];
+
+                if (currentSeg.From != previousSeg.To)
+                    validationResults.Add(FieldValidationResult.CreateError(nameof(Segments), $"The “From” field in the new segment must match the previous one “{previousSeg.To}”"));
+            }
         }
 
 
         // Design output
+        [NotMapped]
         public string Display
         {
             get

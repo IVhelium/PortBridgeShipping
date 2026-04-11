@@ -10,6 +10,7 @@
              d:DataContext="{d:DesignInstance Type=viewModel:ContainersViewModel}"
              d:DesignHeight="640"
              d:DesignWidth="1200">
+    
     <Border BorderBrush="LightGray"
             BorderThickness="1">
         <Grid>
