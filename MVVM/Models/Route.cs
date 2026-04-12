@@ -9,8 +9,8 @@ namespace PortBridgeShipping.MVVM.Models
         public int Id { get; set; }     // Auto-Increment
         public string Name { get; set; } = string.Empty;
 
-        public ObservableCollection<RouteSegment> Segments { get; set; } = new();   // RouteSegment
-        public ObservableCollection<Container> Containers { get; set; } = new();    // Containers
+        public ICollection<RouteSegment> Segments { get; set; } = new List<RouteSegment>();   // RouteSegment
+        public ICollection<Container> Containers { get; set; } = new List<Container>();       // Containers
 
 
         // Validation

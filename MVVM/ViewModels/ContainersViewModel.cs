@@ -5,6 +5,7 @@ using System.Windows.Input;
 using PortBridgeShipping.Core;
 using PortBridgeShipping.Core.Collections.Enums;
 using PortBridgeShipping.Core.Collections.Enums.Filters;
+using PortBridgeShipping.Data;
 using PortBridgeShipping.MVVM.Models;
 using PortBridgeShipping.Services;
 using Container = PortBridgeShipping.MVVM.Models.Container;
@@ -13,6 +14,15 @@ namespace PortBridgeShipping.MVVM.ViewModels
 {
     public class ContainersViewModel : ObservableObject
     {
+
+        #region Services
+
+        private readonly ContainerService _containerService = new();
+        private readonly StatusService _statusService = new();
+        public readonly RouteService _routeService = new();
+
+        #endregion
+
         public ContainersViewModel()
         {
             #region Commands Invocation
@@ -20,20 +30,20 @@ namespace PortBridgeShipping.MVVM.ViewModels
             AddCommand = new RelayCommand(AddContainer, CanAddContainer);
             UpdateCommand = new RelayCommand(UpdateContainer, CanUpdateContainer);
             RemoveCommand = new RelayCommand(RemoveContainer, CanRemoveContainer);
-            ClearCommand = new RelayCommand(ClearForm, CanClearForm);
+            ClearCommand = new RelayCommand(ClearForm);
 
             #endregion
 
+            Containers = new ObservableCollection<Container>();
+            Container = new Container();
 
             ContainersView = CollectionViewSource.GetDefaultView(Containers);   // Создаем представление над основной коллекцией
-            ContainersView.Filter = FilterContainers;   // Присвоение метода логики фильтрации
-
-            Container = new Container();
+            ContainersView.Filter = FilterContainers;                           // Присвоение метода логики фильтрации      
 
             ContainerTypes = Enum.GetValues<ContainerType>();
             Filters = Enum.GetValues<ContainerFilter>();
 
-            Containers = [];
+            LoadData();
         }
 
 
@@ -43,15 +53,6 @@ namespace PortBridgeShipping.MVVM.ViewModels
         public RelayCommand UpdateCommand { get; set; }
         public RelayCommand RemoveCommand { get; set; }
         public RelayCommand ClearCommand { get; set; }
-
-        #endregion
-
-
-        #region Services
-
-        private readonly ContainerService _containerService = new();
-        private readonly StatusService _statusService = new();
-        public readonly RouteService _routeService = new();
 
         #endregion
 
@@ -67,6 +68,30 @@ namespace PortBridgeShipping.MVVM.ViewModels
         public ObservableCollection<Container> Containers { get; set; } = [];
 
         #endregion
+
+
+        private void LoadData()
+        {
+            Statuses.Clear();
+            foreach (var s in _statusService.GetAllStatuses())
+                Statuses.Add(s);
+
+            Routes.Clear();
+            foreach (var r in _routeService.GetAllRoutes())
+                Routes.Add(r);
+
+            Containers.Clear();
+            foreach (var c in _containerService.GetAllContainers())
+            {
+                var status = Statuses.FirstOrDefault(s => s.Id == c.StatusId);
+                if (status != null) c.Status = status;
+
+                var route = Routes.FirstOrDefault(r => r.Id == c.RouteId);
+                if (route != null) c.Route = route;
+
+                Containers.Add(c);
+            }
+        }
 
 
         #region Properties
@@ -97,7 +122,15 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
                 if (_selectedContainer != null)
                 {
-                    Container = _selectedContainer;
+                    Container = new Container
+                    {
+                        Id = _selectedContainer.Id,
+                        ContainerNumber = _selectedContainer.ContainerNumber,
+                        ContainerWeight = _selectedContainer.ContainerWeight,
+                        ContainerType = _selectedContainer.ContainerType,
+                        StatusId = _selectedContainer.StatusId,
+                        RouteId = _selectedContainer.RouteId
+                    };
                 }
 
                 CommandManager.InvalidateRequerySuggested();
@@ -142,11 +175,11 @@ namespace PortBridgeShipping.MVVM.ViewModels
         {
             return Container.ContainerNumber > 0 &&
                    Container.ContainerWeight > 0 &&
-                   Container.ContainerType != default &&
-                   Container.Status != null &&
-                   Container.Route != null &&
+                   Container.ContainerType != ContainerType.None &&
+                   Container.StatusId > 0 &&
+                   Container.RouteId > 0 &&
                    SelectedContainer == null &&
-                   !Containers.Any(con => con.ContainerNumber == Container.ContainerNumber);
+                   !_containerService.Exists(Container.ContainerNumber);
         }
 
         private void AddContainer(object? parameter)
@@ -156,13 +189,13 @@ namespace PortBridgeShipping.MVVM.ViewModels
                 ContainerNumber = Container.ContainerNumber,
                 ContainerWeight = Container.ContainerWeight,
                 ContainerType = Container.ContainerType,
-                StatusId = Container.Status!.Id,
-                Status = Container.Status,
-                RouteId = Container.Route!.Id,
-                Route = Container.Route
+                StatusId = Container.StatusId,
+                RouteId = Container.RouteId
             };
 
-            Containers.Add(container);
+            var createdContainer = _containerService.CreateContainer(container);
+
+            if(createdContainer != null) Containers.Add(createdContainer);
 
             // Clear
             Container = new Container();
@@ -180,17 +213,33 @@ namespace PortBridgeShipping.MVVM.ViewModels
         {
             if (SelectedContainer == null) return;
 
-            Container updateContainer = new()
+            Container container = new()
             {
                 ContainerNumber = Container.ContainerNumber,
                 ContainerWeight = Container.ContainerWeight,
                 ContainerType = Container.ContainerType,
-                Status = Container.Status,
-                Route = Container.Route
+                StatusId = Container.StatusId,
+                RouteId = Container.RouteId
             };
 
-            int index = Containers.IndexOf(SelectedContainer);
-            Containers[index] = updateContainer;
+            //SelectedContainer.ContainerNumber = Container.ContainerNumber;
+            //SelectedContainer.ContainerWeight = Container.ContainerWeight;
+            //SelectedContainer.ContainerType = Container.ContainerType;
+            //SelectedContainer.StatusId = Container.Status!.Id;
+            //SelectedContainer.Status = Container.Status;
+            //SelectedContainer.RouteId = Container.Route!.Id;
+            //SelectedContainer.Route = Container.Route;
+
+            var updatedContainer = _containerService.UpdateContainer(container, SelectedContainer.Id);
+            
+            if (updatedContainer != null)
+            {
+                int index = Containers.IndexOf(SelectedContainer);
+                if (index >= 0) Containers[index] = updatedContainer;
+                SelectedContainer = updatedContainer;
+            }
+
+            ContainersView.Refresh();
 
             // Clear
             SelectedContainer = null;
@@ -208,25 +257,24 @@ namespace PortBridgeShipping.MVVM.ViewModels
         {
             if (SelectedContainer != null)
             {
+                _containerService.DeleteContainer(SelectedContainer.Id);
                 Containers.Remove(SelectedContainer);
             }
 
-            Container = new Container();   // Clear
+            // Clear
+            SelectedContainer = null;
+            Container = new Container();   
         }
 
 
         // ClearCommand Property
-        private bool CanClearForm(object? parameter)
-        {
-            return true;
-        }
-
         private void ClearForm(object? parameter)
         {
             SelectedContainer = null;
             Container = new Container();
             SearchBoxText = string.Empty;
             SelectedFilter = ContainerFilter.Number;
+            ContainersView.Refresh();
         }
 
         #endregion

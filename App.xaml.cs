@@ -36,9 +36,9 @@ namespace PortBridgeShipping
 
                     initialRoute.Segments.AddRange(
                     [
-                        new RouteSegment { RouteId = 1, From = "Lisbon", To = "Madrid", Transport = TransportType.Truck, Order = 1 },
-                        new RouteSegment { RouteId = 1, From = "Madrid", To = "Port", Transport = TransportType.Truck, Order = 2 },
-                        new RouteSegment { RouteId = 1, From = "Port", To = "Egypt", Transport = TransportType.Ship, Order = 3 }
+                        new RouteSegment { From = "Lisbon", To = "Madrid", Transport = TransportType.Truck, Order = 1 },
+                        new RouteSegment { From = "Madrid", To = "Port", Transport = TransportType.Truck, Order = 2 },
+                        new RouteSegment { From = "Port", To = "Egypt", Transport = TransportType.Ship, Order = 3 }
                     ]);
 
                     db.Routes.Add(initialRoute);

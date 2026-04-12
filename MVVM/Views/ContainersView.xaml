@@ -110,6 +110,7 @@
                                FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro"/>
                     <TextBox Height="25"
                              Text="{Binding Container.ContainerNumber, UpdateSourceTrigger=PropertyChanged}"
+                             MaxLength="10"
                              Padding="5, 0"
                              VerticalContentAlignment="Center"
                              x:Name="TextBox_Number" />
@@ -121,6 +122,7 @@
                                FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
                     <TextBox Height="25"
                              Text="{Binding Container.ContainerWeight, UpdateSourceTrigger=PropertyChanged}"
+                             MaxLength="10"
                              Padding="5, 0"
                              VerticalContentAlignment="Center"
                              x:Name="TextBox_Weight" />
@@ -150,7 +152,8 @@
                               Background="White"
                               VerticalContentAlignment="Center"
                               ItemsSource="{Binding Statuses}"
-                              SelectedItem="{Binding Container.Status}"
+                              SelectedValue="{Binding Container.StatusId, Mode=TwoWay}"
+                              SelectedValuePath="Id"
                               DisplayMemberPath="Name"
                               x:Name="ComboBox_Status" />
 
@@ -165,7 +168,8 @@
                               Background="White"
                               VerticalContentAlignment="Center"
                               ItemsSource="{Binding Routes}"
-                              SelectedItem="{Binding Container.Route}"
+                              SelectedValue="{Binding Container.RouteId, Mode=TwoWay}"
+                              SelectedValuePath="Id"
                               DisplayMemberPath="Display"
                               x:Name="ComboBox_Route" />
                 </StackPanel>

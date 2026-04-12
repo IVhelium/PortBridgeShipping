@@ -8,7 +8,7 @@ namespace PortBridgeShipping.MVVM.Models
         public string Name { get; set; } = string.Empty;
 
 
-        public ObservableCollection<Container> Containers { get; set; } = new();
+        public ICollection<Container> Containers { get; set; } = new List<Container>();
 
         public override string ToString()
         {
