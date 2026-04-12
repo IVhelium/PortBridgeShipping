@@ -232,6 +232,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
             var updatedContainer = _containerService.UpdateContainer(container, SelectedContainer.Id);
             
+            // UI
             if (updatedContainer != null)
             {
                 int index = Containers.IndexOf(SelectedContainer);
