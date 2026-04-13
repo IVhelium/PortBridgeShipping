@@ -52,7 +52,7 @@ namespace PortBridgeShipping.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Containers");
+                    b.ToTable("Containers", (string)null);
                 });
 
             modelBuilder.Entity("PortBridgeShipping.MVVM.Models.Route", b =>
@@ -73,7 +73,7 @@ namespace PortBridgeShipping.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Routes");
+                    b.ToTable("Routes", (string)null);
                 });
 
             modelBuilder.Entity("PortBridgeShipping.MVVM.Models.RouteSegment", b =>
@@ -110,7 +110,7 @@ namespace PortBridgeShipping.Migrations
                     b.HasIndex("RouteId", "Order")
                         .IsUnique();
 
-                    b.ToTable("RouteSegments");
+                    b.ToTable("RouteSegments", (string)null);
                 });
 
             modelBuilder.Entity("PortBridgeShipping.MVVM.Models.Status", b =>
@@ -125,7 +125,7 @@ namespace PortBridgeShipping.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Statuses");
+                    b.ToTable("Statuses", (string)null);
                 });
 
             modelBuilder.Entity("PortBridgeShipping.MVVM.Models.Container", b =>
