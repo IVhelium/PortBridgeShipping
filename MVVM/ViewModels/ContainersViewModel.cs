@@ -1,13 +1,12 @@
-﻿using System.Collections.ObjectModel;
+﻿using PortBridgeShipping.Core;
+using PortBridgeShipping.Core.Collections.Enums;
+using PortBridgeShipping.Core.Collections.Enums.Filters;
+using PortBridgeShipping.MVVM.Models;
+using PortBridgeShipping.Services;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
 using System.Windows.Input;
-using PortBridgeShipping.Core;
-using PortBridgeShipping.Core.Collections.Enums;
-using PortBridgeShipping.Core.Collections.Enums.Filters;
-using PortBridgeShipping.Data;
-using PortBridgeShipping.MVVM.Models;
-using PortBridgeShipping.Services;
 using Container = PortBridgeShipping.MVVM.Models.Container;
 
 namespace PortBridgeShipping.MVVM.ViewModels
@@ -195,7 +194,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
             var createdContainer = _containerService.CreateContainer(container);
 
-            if(createdContainer != null) Containers.Add(createdContainer);
+            if (createdContainer != null) Containers.Add(createdContainer);
 
             // Clear
             Container = new Container();
@@ -231,7 +230,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
             //SelectedContainer.Route = Container.Route;
 
             var updatedContainer = _containerService.UpdateContainer(container, SelectedContainer.Id);
-            
+
             // UI
             if (updatedContainer != null)
             {
@@ -264,7 +263,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
             // Clear
             SelectedContainer = null;
-            Container = new Container();   
+            Container = new Container();
         }
 
 

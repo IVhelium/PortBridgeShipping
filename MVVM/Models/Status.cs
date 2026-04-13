@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-
-namespace PortBridgeShipping.MVVM.Models
+﻿namespace PortBridgeShipping.MVVM.Models
 {
     public class Status
     {
@@ -8,7 +6,7 @@ namespace PortBridgeShipping.MVVM.Models
         public string Name { get; set; } = string.Empty;
 
 
-        public ICollection<Container> Containers { get; set; } = new List<Container>();
+        public List<Container> Containers { get; set; } = new List<Container>();
 
         public override string ToString()
         {
