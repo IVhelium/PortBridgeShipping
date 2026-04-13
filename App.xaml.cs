@@ -18,6 +18,19 @@ namespace PortBridgeShipping
             {
                 db.Database.Migrate();  // Create and update Db
 
+                if (!db.Transports.Any())
+                {
+                    db.Transports.Add(
+                        new Transport
+                        {
+                            TransportNumber = 123456789,
+                            Name = "Name",
+                            TransportType = TransportType.Ship,
+                            Capacity = 15000
+                        }
+                    );
+                }
+
                 if (!db.Statuses.Any())
                 {
                     db.Statuses.AddRange(
@@ -36,9 +49,9 @@ namespace PortBridgeShipping
 
                     initialRoute.Segments.AddRange(
                     [
-                        new RouteSegment { From = "Lisbon", To = "Madrid", Transport = TransportType.Truck, Order = 1 },
-                        new RouteSegment { From = "Madrid", To = "Port", Transport = TransportType.Truck, Order = 2 },
-                        new RouteSegment { From = "Port", To = "Egypt", Transport = TransportType.Ship, Order = 3 }
+                        new RouteSegment { From = "Lisbon", To = "Madrid", TransportId = 1, Order = 1 },
+                        new RouteSegment { From = "Madrid", To = "Port", TransportId = 1, Order = 2 },
+                        new RouteSegment { From = "Port", To = "Egypt", TransportId = 1, Order = 3 }
                     ]);
 
                     db.Routes.Add(initialRoute);

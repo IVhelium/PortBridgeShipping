@@ -7,6 +7,7 @@ namespace PortBridgeShipping.Data
 {
     public class ApplicationDbContext : DbContext
     {
+        public DbSet<Transport> Transports { get; set; }
         public DbSet<Container> Containers { get; set; }
         public DbSet<Route> Routes { get; set; }
         public DbSet<RouteSegment> RouteSegments { get; set; }

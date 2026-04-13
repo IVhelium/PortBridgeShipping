@@ -9,7 +9,10 @@ namespace PortBridgeShipping.MVVM.Models
         public int Order { get; set; }
         public string From { get; set; } = string.Empty;    // Initial Country
         public string To { get; set; } = string.Empty;      // Last Country
-        public TransportType Transport { get; set; }
+
+        // Transports
+        public int TransportId { get; set; }                // Foreing Key
+        public Transport Transport { get; set; } = null!;   // Navigation Property
 
         // Routes
         public int RouteId { get; set; }            // Foreing Key
