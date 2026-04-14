@@ -28,10 +28,7 @@ namespace PortBridgeShipping.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Unique Container Number
-            modelBuilder.Entity<Container>()
-                .HasIndex(c => c.ContainerNumber)
-                .IsUnique();
+            #region Relations
 
             // Container -> Status
             modelBuilder.Entity<Container>()
@@ -47,17 +44,48 @@ namespace PortBridgeShipping.Data
                 .HasForeignKey(c => c.RouteId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Route -> RouteSegment
+            // RouteSegment -> Route
             modelBuilder.Entity<RouteSegment>()
                 .HasOne(rs => rs.Route)
                 .WithMany(r => r.Segments)
                 .HasForeignKey(rs => rs.RouteId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // RouteSegmentTransport -> Transport
+            modelBuilder.Entity<RouteSegmentTransport>()
+                .HasOne(rst => rst.Transport)
+                .WithMany(rs => rs.TransportSegments)
+                .HasForeignKey(rst => rst.TransoprtId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // RouteSegmentTransport -> RouteSegment
+            modelBuilder.Entity<RouteSegmentTransport>()
+                .HasOne(rst => rst.RouteSegment)
+                .WithMany(rs => rs.SegmentTransports)
+                .HasForeignKey(rst => rst.RouteSegmentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            #endregion
+
+            #region Unique
+
+            // Unique Container Number
+            modelBuilder.Entity<Container>()
+                .HasIndex(c => c.ContainerNumber)
+                .IsUnique();
+
             // Unique RouteId and Order number
             modelBuilder.Entity<RouteSegment>()
                 .HasIndex(rs => new { rs.RouteId, rs.Order })
                 .IsUnique();
+
+            // Unique RouteSegmentId and TransportId
+            modelBuilder.Entity<RouteSegmentTransport>()
+                .HasIndex(rst => new { rst.RouteSegmentId, rst.TransoprtId })
+                .IsUnique();
+
+            #endregion
+
 
 
             base.OnModelCreating(modelBuilder);

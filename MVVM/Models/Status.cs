@@ -6,7 +6,7 @@
         public string Name { get; set; } = string.Empty;
 
 
-        public List<Container> Containers { get; set; } = new List<Container>();
+        public ICollection<Container> Containers { get; set; } = new List<Container>();
 
         public override string ToString()
         {

@@ -115,7 +115,7 @@
                              GroupName="Menu_Radio_Btn"
                              coreProp:ImageIconProperties.IconSource="/Images/Icons/MainWindow/Home-Icon-32px.png" />
 
-                <RadioButton Content="Conteiners"
+                <RadioButton Content="Containers"
                              Height="45"
                              DockPanel.Dock="Top"
                              Foreground="White"

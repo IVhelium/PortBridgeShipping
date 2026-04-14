@@ -1,5 +1,4 @@
 ﻿using Catel.Data;
-using PortBridgeShipping.Core.Collections.Enums;
 
 namespace PortBridgeShipping.MVVM.Models
 {
@@ -10,13 +9,12 @@ namespace PortBridgeShipping.MVVM.Models
         public string From { get; set; } = string.Empty;    // Initial Country
         public string To { get; set; } = string.Empty;      // Last Country
 
-        // Transports
-        public int TransportId { get; set; }                // Foreing Key
-        public Transport Transport { get; set; } = null!;   // Navigation Property
-
         // Routes
         public int RouteId { get; set; }            // Foreing Key
         public Route Route { get; set; } = null!;   // Navigation Property
+
+        // Transports
+        public ICollection<RouteSegmentTransport> SegmentTransports { get; set; } = new List<RouteSegmentTransport>();
 
 
         // Validation
