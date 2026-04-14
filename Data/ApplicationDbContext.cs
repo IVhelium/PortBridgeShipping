@@ -11,12 +11,13 @@ namespace PortBridgeShipping.Data
         public DbSet<Container> Containers { get; set; }
         public DbSet<Route> Routes { get; set; }
         public DbSet<RouteSegment> RouteSegments { get; set; }
+        public DbSet<RouteSegmentTransport> RouteSegmentTransports { get; set; }
         public DbSet<Status> Statuses { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string path = Path.Combine(folder, "PortBridgeShipping");
+            string path = Path.Combine(folder, "PortBridgeShippingDb");
 
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
@@ -42,7 +43,7 @@ namespace PortBridgeShipping.Data
                 .HasOne(c => c.Route)
                 .WithMany(r => r.Containers)
                 .HasForeignKey(c => c.RouteId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
 
             // RouteSegment -> Route
             modelBuilder.Entity<RouteSegment>()
@@ -54,9 +55,9 @@ namespace PortBridgeShipping.Data
             // RouteSegmentTransport -> Transport
             modelBuilder.Entity<RouteSegmentTransport>()
                 .HasOne(rst => rst.Transport)
-                .WithMany(rs => rs.TransportSegments)
-                .HasForeignKey(rst => rst.TransoprtId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .WithMany(t => t.TransportSegments)
+                .HasForeignKey(rst => rst.TransportId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // RouteSegmentTransport -> RouteSegment
             modelBuilder.Entity<RouteSegmentTransport>()
@@ -67,7 +68,8 @@ namespace PortBridgeShipping.Data
 
             #endregion
 
-            #region Unique
+
+            #region Unique/FK
 
             // Unique Container Number
             modelBuilder.Entity<Container>()
@@ -79,14 +81,11 @@ namespace PortBridgeShipping.Data
                 .HasIndex(rs => new { rs.RouteId, rs.Order })
                 .IsUnique();
 
-            // Unique RouteSegmentId and TransportId
+            // FK RouteSegmentId and TransportId
             modelBuilder.Entity<RouteSegmentTransport>()
-                .HasIndex(rst => new { rst.RouteSegmentId, rst.TransoprtId })
-                .IsUnique();
+                .HasKey(rst => new { rst.RouteSegmentId, rst.TransportId });
 
             #endregion
-
-
 
             base.OnModelCreating(modelBuilder);
         }

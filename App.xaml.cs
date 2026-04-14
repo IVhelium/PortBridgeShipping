@@ -18,19 +18,6 @@ namespace PortBridgeShipping
             {
                 db.Database.Migrate();  // Create and update Db
 
-                if (!db.Transports.Any())
-                {
-                    db.Transports.Add(
-                        new Transport
-                        {
-                            TransportNumber = 123456789,
-                            Name = "Name",
-                            TransportType = TransportType.Ship,
-                            Capacity = 15000
-                        }
-                    );
-                }
-
                 if (!db.Statuses.Any())
                 {
                     db.Statuses.AddRange(

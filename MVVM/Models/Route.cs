@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using Catel.Data;
 
 namespace PortBridgeShipping.MVVM.Models
@@ -25,13 +24,16 @@ namespace PortBridgeShipping.MVVM.Models
 
             var sortedSegments = Segments?.OrderBy(seg => seg.Order).ToList();
 
-            for (int i = 1; i < sortedSegments?.Count; i++)
+            if (sortedSegments != null && sortedSegments.Count > 0)
             {
-                var currentSeg = sortedSegments[i];
-                var previousSeg = sortedSegments[i - 1];
+                for (int i = 1; i < sortedSegments?.Count; i++)
+                {
+                    var currentSeg = sortedSegments[i];
+                    var previousSeg = sortedSegments[i - 1];
 
-                if (currentSeg.From != previousSeg.To)
-                    validationResults.Add(FieldValidationResult.CreateError(nameof(Segments), $"The “From” field in the new segment must match the previous one “{previousSeg.To}”"));
+                    if (currentSeg.From != previousSeg.To)
+                        validationResults.Add(FieldValidationResult.CreateError(nameof(Segments), $"The “From” field in the new segment must match the previous one “{previousSeg.To}”"));
+                }
             }
         }
 

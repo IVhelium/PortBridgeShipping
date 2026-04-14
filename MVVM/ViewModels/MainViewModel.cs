@@ -12,6 +12,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
         #endregion
 
+
         public MainViewModel()
         {
             HomeVM = new HomeViewModel();
@@ -139,7 +140,6 @@ namespace PortBridgeShipping.MVVM.ViewModels
         }
 
         #endregion
-
 
 
         #region Verification

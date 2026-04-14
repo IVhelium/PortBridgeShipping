@@ -42,7 +42,8 @@
         </DataTemplate>
     </Window.Resources>
 
-        <Grid Background="#c8b2d4">
+    <Grid Background="#c8b2d4"
+          MouseLeftButtonDown="Grid_MouseLeftButtonDown">
         
         <!-- Menu Columns and Rows Definition  -->
         <Grid.ColumnDefinitions>
@@ -109,7 +110,6 @@
                              DockPanel.Dock="Top"
                              Foreground="White"
                              FontSize="16"
-                             IsChecked="True"
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding HomeViewCommand}"
                              GroupName="Menu_Radio_Btn"
@@ -170,6 +170,7 @@
                              Foreground="White"
                              FontSize="16"
                              Margin="0, 20, 0, 0"
+                             IsChecked="True"
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding LogInViewCommand}"
                              GroupName="Menu_Radio_Btn"

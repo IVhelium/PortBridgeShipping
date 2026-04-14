@@ -15,8 +15,8 @@ namespace PortBridgeShipping.MVVM.Models
         public Status Status { get; set; } = null!;     // Navigation Property
 
         // Route
-        public int RouteId { get; set; }                // Foreign Key
-        public Route Route { get; set; } = null!;       // Navigation Property
+        public int? RouteId { get; set; }                // Foreign Key
+        public Route? Route { get; set; }                 // Navigation Property
 
 
         // Validation
@@ -36,10 +36,6 @@ namespace PortBridgeShipping.MVVM.Models
             // Status
             if (Status == null)
                 validationResults.Add(FieldValidationResult.CreateError(nameof(Status), "Status is required"));
-
-            // Route
-            if (Route == null)
-                validationResults.Add(FieldValidationResult.CreateError(nameof(Route), "Route is required"));
         }
     }
 }
