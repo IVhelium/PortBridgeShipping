@@ -10,9 +10,21 @@ namespace PortBridgeShipping.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Containers_Routes_RouteId",
+                table: "Containers");
+
             migrationBuilder.DropColumn(
                 name: "Transport",
                 table: "RouteSegments");
+
+            migrationBuilder.AlterColumn<int>(
+                name: "RouteId",
+                table: "Containers",
+                type: "INTEGER",
+                nullable: true,
+                oldClrType: typeof(int),
+                oldType: "INTEGER");
 
             migrationBuilder.CreateTable(
                 name: "Transports",
@@ -31,48 +43,52 @@ namespace PortBridgeShipping.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RouteSegmentTransport",
+                name: "RouteSegmentTransports",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
                     RouteSegmentId = table.Column<int>(type: "INTEGER", nullable: false),
-                    TransoprtId = table.Column<int>(type: "INTEGER", nullable: false)
+                    TransportId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RouteSegmentTransport", x => x.Id);
+                    table.PrimaryKey("PK_RouteSegmentTransports", x => new { x.RouteSegmentId, x.TransportId });
                     table.ForeignKey(
-                        name: "FK_RouteSegmentTransport_RouteSegments_RouteSegmentId",
+                        name: "FK_RouteSegmentTransports_RouteSegments_RouteSegmentId",
                         column: x => x.RouteSegmentId,
                         principalTable: "RouteSegments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RouteSegmentTransport_Transports_TransoprtId",
-                        column: x => x.TransoprtId,
+                        name: "FK_RouteSegmentTransports_Transports_TransportId",
+                        column: x => x.TransportId,
                         principalTable: "Transports",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_RouteSegmentTransport_RouteSegmentId_TransoprtId",
-                table: "RouteSegmentTransport",
-                columns: new[] { "RouteSegmentId", "TransoprtId" },
-                unique: true);
+                name: "IX_RouteSegmentTransports_TransportId",
+                table: "RouteSegmentTransports",
+                column: "TransportId");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_RouteSegmentTransport_TransoprtId",
-                table: "RouteSegmentTransport",
-                column: "TransoprtId");
+            migrationBuilder.AddForeignKey(
+                name: "FK_Containers_Routes_RouteId",
+                table: "Containers",
+                column: "RouteId",
+                principalTable: "Routes",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.SetNull);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Containers_Routes_RouteId",
+                table: "Containers");
+
             migrationBuilder.DropTable(
-                name: "RouteSegmentTransport");
+                name: "RouteSegmentTransports");
 
             migrationBuilder.DropTable(
                 name: "Transports");
@@ -83,6 +99,24 @@ namespace PortBridgeShipping.Migrations
                 type: "INTEGER",
                 nullable: false,
                 defaultValue: 0);
+
+            migrationBuilder.AlterColumn<int>(
+                name: "RouteId",
+                table: "Containers",
+                type: "INTEGER",
+                nullable: false,
+                defaultValue: 0,
+                oldClrType: typeof(int),
+                oldType: "INTEGER",
+                oldNullable: true);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Containers_Routes_RouteId",
+                table: "Containers",
+                column: "RouteId",
+                principalTable: "Routes",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
     }
 }

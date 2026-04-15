@@ -2,8 +2,6 @@
 {
     public class RouteSegmentTransport
     {
-        public int Id { get; set; }
-
         public int RouteSegmentId { get; set; }
         public RouteSegment RouteSegment { get; set; } = null!;
 

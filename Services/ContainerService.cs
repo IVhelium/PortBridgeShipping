@@ -1,6 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.Office2019.Excel.RichData2;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PortBridgeShipping.Data;
 using Container = PortBridgeShipping.MVVM.Models.Container;
 
@@ -24,7 +22,6 @@ namespace PortBridgeShipping.Services
             using var db = new ApplicationDbContext();
 
             return db.Containers
-                   .AsNoTracking()
                    .Include(c => c.Status)
                    .Include(c => c.Route)
                    .FirstOrDefault(c => c.Id == id);
@@ -82,6 +79,7 @@ namespace PortBridgeShipping.Services
             using var db = new ApplicationDbContext();
 
             var containerExist = db.Containers.FirstOrDefault(c => c.Id == id);
+
             if (containerExist == null) return false;
 
             db.Containers.Remove(containerExist);

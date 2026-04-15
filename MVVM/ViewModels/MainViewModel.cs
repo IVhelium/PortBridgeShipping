@@ -8,6 +8,8 @@ namespace PortBridgeShipping.MVVM.ViewModels
     {
         #region Services
 
+        private readonly TransportService _transportService = new();
+        private readonly RouteService _routeService = new();
         private readonly ContainerService _containerService = new();
 
         #endregion
@@ -41,7 +43,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
                     CurrentView = ContainersVM;
                     Title = "Containers Menegment";
                 },
-                obj => HasContainer()
+                obj => HasRoute()
             );
 
             ShipsViewCommand = new RelayCommand(obj =>
@@ -62,7 +64,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
                     CurrentView = RoutesVM;
                     Title = "Routes Menegment";
                 },
-                obj => HasContainer()
+                obj => HasTransport()
             );
 
             LogInViewCommand = new RelayCommand(obj =>
@@ -143,6 +145,16 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
 
         #region Verification
+
+        public bool HasTransport()
+        {
+            return _transportService.GetAllTransports().Count != 0;  // If Transport Count more than 0, return true
+        }
+
+        public bool HasRoute()
+        {
+            return _routeService.GetAllRoutes().Count != 0;  // If Route Count more than 0, return true
+        }
 
         public bool HasContainer()
         {
