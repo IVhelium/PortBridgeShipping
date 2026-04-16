@@ -31,7 +31,7 @@ namespace PortBridgeShipping
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                this.DragMove();
+                this.DragMove();    // Возможность передвигать окно
             }
         }
     }

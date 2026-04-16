@@ -41,7 +41,30 @@ namespace PortBridgeShipping.Services
 
             routeExist.Name = route.Name;
 
+            return db.Routes
+                .Include(r => r.Segments)
+                .FirstOrDefault(r => r.Id == id);
+        }
 
+        public bool DeleteRoute(int id)
+        {
+            using var db = new ApplicationDbContext();
+
+            var routeExist = db.Routes.FirstOrDefault(r => r.Id == id);
+
+            if (routeExist == null) return false;
+
+            db.Routes.Remove(routeExist);
+            db.SaveChanges();
+
+            return true;
+        }
+
+        public bool Exists(int id)
+        {
+            using var db = new ApplicationDbContext();
+
+            return db.Routes.Any(r => r.Id == id);
         }
     }
 }
