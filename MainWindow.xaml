@@ -125,25 +125,37 @@
                              GroupName="Menu_Radio_Btn"
                              coreProp:ImageIconProperties.IconSource="/Images/Icons/MainWindow/Conteiner-Icon-32px.png" />
 
-                <RadioButton Content="Ships"
-                             Height="45"
-                             DockPanel.Dock="Top"
-                             Foreground="White"
-                             FontSize="16"
-                             Style="{StaticResource MenuButtonTheme}"
-                             Command="{Binding ShipsViewCommand}"
-                             GroupName="Menu_Radio_Btn"
-                             coreProp:ImageIconProperties.IconSource="/Images/Icons/MainWindow/Ship-Icon-32px.png" />
+                <Expander Header="Transports"
+                          DockPanel.Dock="Top"
+                          Foreground="White"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          FontSize="16"
+                          Style="{StaticResource MenuExpanderTheme}"
+                          FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro">
+                    
+                    <StackPanel>
+                        <RadioButton Content="Ships"
+                                     Height="45"
+                                     DockPanel.Dock="Top"
+                                     Foreground="White"
+                                     FontSize="16"
+                                     Style="{StaticResource MenuButtonTheme}"
+                                     Command="{Binding ShipsViewCommand}"
+                                     GroupName="Menu_Radio_Btn"
+                                     coreProp:ImageIconProperties.IconSource="/Images/Icons/MainWindow/Ship-Icon-32px.png" />
 
-                <RadioButton Content="Trucks"
-                             Height="45"
-                             DockPanel.Dock="Top"
-                             Foreground="White"
-                             FontSize="16"
-                             Style="{StaticResource MenuButtonTheme}"
-                             Command="{Binding TrucksViewCommand}"
-                             GroupName="Menu_Radio_Btn"
-                             coreProp:ImageIconProperties.IconSource="/Images/Icons/MainWindow/Truck-Icon-32px.png" />
+                        <RadioButton Content="Trucks"
+                                     Height="45"
+                                     DockPanel.Dock="Top"
+                                     Foreground="White"
+                                     FontSize="16"
+                                     Style="{StaticResource MenuButtonTheme}"
+                                     Command="{Binding TrucksViewCommand}"
+                                     GroupName="Menu_Radio_Btn"
+                                     coreProp:ImageIconProperties.IconSource="/Images/Icons/MainWindow/Truck-Icon-32px.png" />
+                    </StackPanel>
+                </Expander>
 
                 <RadioButton Content="Routes"
                              Height="45"
