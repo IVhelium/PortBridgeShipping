@@ -175,8 +175,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
             return Container.ContainerNumber > 0 &&
                    Container.ContainerWeight > 0 &&
                    Container.ContainerType != ContainerType.None &&
-                   Container.StatusId > 0 &&
-                   Container.RouteId > 0 &&
+                   Container.StatusId > 0 && Container.RouteId > 0 &&
                    SelectedContainer == null &&
                    !_containerService.Exists(Container.ContainerNumber);
         }

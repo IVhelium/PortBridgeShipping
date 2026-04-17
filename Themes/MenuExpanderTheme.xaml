@@ -25,12 +25,12 @@
                                             <TextBlock x:Name="Arrow"
                                                        Text="▶"
                                                        VerticalAlignment="Center"
-                                                       Margin="20, 0, 0, 0" />
+                                                       Margin="22, 0, 0, 0" />
                                             
                                             <ContentPresenter Grid.Column="1"
                                                               ContentSource="Content"
                                                               VerticalAlignment="Center"
-                                                              Margin="10, 0, 0, 0" />
+                                                              Margin="20, 0, 0, 0" />
                                         </Grid>
                                     </Border>
                                     
@@ -60,7 +60,7 @@
                         </ToggleButton>
 
                         <!-- Содержимое -->
-                        <Border >
+                        <Border Background="#FFAD99C1">
                             <ContentPresenter x:Name="ExpandSite"
                                               Visibility="Collapsed"
                                               Margin="0, 5, 0, 0" />

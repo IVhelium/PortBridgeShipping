@@ -1,4 +1,5 @@
-﻿using TransportType = PortBridgeShipping.Core.Collections.Enums.TransportType;
+﻿using System.Collections.ObjectModel;
+using TransportType = PortBridgeShipping.Core.Collections.Enums.TransportType;
 
 namespace PortBridgeShipping.MVVM.Models
 {
@@ -11,6 +12,6 @@ namespace PortBridgeShipping.MVVM.Models
         public int Capacity { get; set; }   // Количество контейнеров
 
         // Segments
-        public ICollection<RouteSegmentTransport> TransportSegments { get; set; } = new List<RouteSegmentTransport>();
+        public ObservableCollection<RouteSegmentTransport> TransportSegments { get; set; } = new ObservableCollection<RouteSegmentTransport>();
     }
 }

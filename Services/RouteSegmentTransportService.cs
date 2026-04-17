@@ -47,7 +47,7 @@ namespace PortBridgeShipping.Services
                                        .FirstOrDefault(rst => rst.RouteSegmentId == segmentId
                                        && rst.TransportId == transportId);
 
-            if (transportSegmentExist == null) return null;
+            if (transportSegmentExist != null) return null;
 
             var transportSegment = new RouteSegmentTransport
             {

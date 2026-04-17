@@ -12,10 +12,6 @@
     <None Remove="Fonts\Cagliostro-Regular.ttf" />
     <None Remove="Fonts\Montserrat-VariableFont_wght.ttf" />
     <None Remove="Images\Delete-Icon-16px.png" />
-    <None Remove="Images\Icons\ContainersView\Delete-Icon-32px.png" />
-    <None Remove="Images\Icons\ContainersView\Plus-Icon-32px.png" />
-    <None Remove="Images\Icons\ContainersView\Update-Icon-32px.png" />
-    <None Remove="Images\Icons\Global\Trash-Icon-32px.png" />
     <None Remove="Images\Icons\MainWindow\Conteiner-Icon-32px.png" />
     <None Remove="Images\Icons\MainWindow\Exit-Icon-32px.png" />
     <None Remove="Images\Icons\MainWindow\Home-Icon-32px.png" />
@@ -50,11 +46,13 @@
   <ItemGroup>
     <Resource Include="Fonts\Cagliostro-Regular.ttf" />
     <Resource Include="Fonts\Montserrat-VariableFont_wght.ttf" />
-    <Resource Include="Images\Icons\ContainersView\Delete-Icon-32px.png" />
-    <Resource Include="Images\Icons\ContainersView\Plus-Icon-32px.png" />
-    <Resource Include="Images\Icons\ContainersView\Update-Icon-32px.png" />
-	<Resource Include="Images\Icons\Global\Search-Icon-32px.png" />
-	<Resource Include="Images\Icons\ContainersView\Trash-Icon-32px.png" />
+    <Resource Include="Images\Icons\Global\Delete-Icon-32px.png" />
+    <Resource Include="Images\Icons\Global\Plus-Icon-32px.png" />
+    <Resource Include="Images\Icons\Global\Update-Icon-32px.png" />
+	<Resource Include="Images\Icons\Global\Search-Icon-32px.png">
+	  <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	</Resource>
+	<Resource Include="Images\Icons\Global\Trash-Icon-32px.png" />
     <Resource Include="Images\Icons\MainWindow\Conteiner-Icon-32px.png" />
     <Resource Include="Images\Icons\MainWindow\Exit-Icon-32px.png" />
     <Resource Include="Images\Icons\MainWindow\Home-Icon-32px.png" />

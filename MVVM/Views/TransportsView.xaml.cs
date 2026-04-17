@@ -5,9 +5,9 @@ namespace PortBridgeShipping.MVVM.Views
     /// <summary>
     /// Логика взаимодействия для TrucksView.xaml
     /// </summary>
-    public partial class TrucksView : UserControl
+    public partial class TransportsView : UserControl
     {
-        public TrucksView()
+        public TransportsView()
         {
             InitializeComponent();
         }

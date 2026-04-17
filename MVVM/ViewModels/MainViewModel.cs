@@ -19,8 +19,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
         {
             HomeVM = new HomeViewModel();
             ContainersVM = new ContainersViewModel();
-            ShipsVM = new ShipsViewModel();
-            TrucksVM = new TrucksViewModel();
+            TransportsVM = new TransportsViewModel();
             RoutesVM = new RoutesViewModel();
             LogInVM = new LogInViewModel();
 
@@ -46,16 +45,10 @@ namespace PortBridgeShipping.MVVM.ViewModels
                 obj => HasRoute()
             );
 
-            ShipsViewCommand = new RelayCommand(obj =>
+            TransportsViewCommand = new RelayCommand(obj =>
             {
-                CurrentView = ShipsVM;
+                CurrentView = TransportsVM;
                 Title = "Ships Menegment";
-            });
-
-            TrucksViewCommand = new RelayCommand(obj =>
-            {
-                CurrentView = TrucksVM;
-                Title = "Trucks Menegment";
             });
 
             RoutesViewCommand = new RelayCommand(
@@ -81,8 +74,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
         public RelayCommand HomeViewCommand { get; set; }
         public RelayCommand ContainersViewCommand { get; set; }
-        public RelayCommand ShipsViewCommand { get; set; }
-        public RelayCommand TrucksViewCommand { get; set; }
+        public RelayCommand TransportsViewCommand { get; set; }
         public RelayCommand RoutesViewCommand { get; set; }
         public RelayCommand LogInViewCommand { get; set; }
 
@@ -93,8 +85,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
         public HomeViewModel HomeVM { get; set; }
         public ContainersViewModel ContainersVM { get; set; }
-        public ShipsViewModel ShipsVM { get; set; }
-        public TrucksViewModel TrucksVM { get; set; }
+        public TransportsViewModel TransportsVM { get; set; }
         public RoutesViewModel RoutesVM { get; set; }
         public LogInViewModel LogInVM { get; set; }
 

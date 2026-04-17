@@ -1,13 +1,13 @@
-﻿<UserControl x:Class="PortBridgeShipping.MVVM.Views.ContainersView"
+﻿<UserControl x:Class="PortBridgeShipping.MVVM.Views.TransportsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:PortBridgeShipping.MVVM.Views"
              xmlns:viewModel="clr-namespace:PortBridgeShipping.MVVM.ViewModels"
              xmlns:coreProp="clr-namespace:PortBridgeShipping.Core.DependencyProperties"
-             mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance Type=viewModel:ContainersViewModel}"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=viewModel:TransportsViewModel}"
              d:DesignHeight="640"
              d:DesignWidth="1200">
     
@@ -55,73 +55,91 @@
                               Height="25"
                               Background="White"
                               ItemsSource="{Binding Filters}"
-                              SelectedItem="{Binding SelectedFilter}"/>
+                              SelectedItem="{Binding SelectedFilter}" />
+
+                    <ComboBox Grid.Column="0"
+                              Grid.Row="0"
+                              Margin="15, 0"
+                              Width="140"
+                              Height="25"
+                              Background="White"
+                              ItemsSource="{Binding TransportTypes}"
+                              SelectedItem="{Binding SelectedType}" />
                 </StackPanel>
 
-                <DataGrid Grid.Column="0"
-                          Grid.Row="1"
-                          Margin="15, 0, 15, 15"
-                          AutoGenerateColumns="False"
-                          IsReadOnly="True"
-                          FontSize="13"
-                          CanUserResizeColumns="False"
-                          CanUserResizeRows="False"
-                          ItemsSource="{Binding Containers}"
-                          SelectedItem="{Binding SelectedContainer}"
-                          x:Name="DataGridView_Containers">
+                <!-- Content Control -->
+                <Grid Grid.Column="0"
+                      Grid.Row="1">
 
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Number"
-                                            Width="Auto"
-                                            MinWidth="150"
-                                            Binding="{Binding ContainerNumber}" />
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="350"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <DataGrid Grid.Row="0"
+                              Margin="15, 0"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              FontSize="13"
+                              CanUserResizeColumns="False"
+                              CanUserResizeRows="False"
+                              ItemsSource="{Binding Transports}"
+                              SelectedItem="{Binding SelectedTransport}"
+                              x:Name="DataGridView_Transports">
 
-                        <DataGridTextColumn Header="Weight"
-                                            Width="Auto"
-                                            MinWidth="120"
-                                            Binding="{Binding ContainerWeight}" />
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Number"
+                                                Width="Auto"
+                                                MinWidth="180"
+                                                Binding="{Binding TransportNumber}" />
 
-                        <DataGridTextColumn Header="Type"
-                                            Width="Auto"
-                                            MinWidth="100"
-                                            Binding="{Binding ContainerType}" />
+                            <DataGridTextColumn Header="Name"
+                                                Width="Auto"
+                                                MinWidth="180"
+                                                Binding="{Binding Name}" />
 
-                        <DataGridTextColumn Header="Status"
-                                            Width="Auto"
-                                            MinWidth="150"
-                                            Binding="{Binding Status.Name}" />
+                            <DataGridTextColumn Header="Type"
+                                                Width="Auto"
+                                                MinWidth="180"
+                                                Binding="{Binding TransportType}" />
 
-                        <DataGridTextColumn Header="Route"
-                                            Width="*"
-                                            MinWidth="150"
-                                            Binding="{Binding Route.Display}" />
-                    </DataGrid.Columns>
-                </DataGrid>
+                            <DataGridTextColumn Header="Capacity"
+                                                Width="*"
+                                                MinWidth="150"
+                                                Binding="{Binding Capacity}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <ListBox Grid.Row="1"
+                             Margin="15">
+
+                    </ListBox>
+                </Grid>
 
                 <!-- Control Panel -->
                 <StackPanel Grid.Column="1"
                             Grid.Row="1"
                             Margin="0, 0, 15, 0"
                             Orientation="Vertical">
-                    
+
                     <TextBlock Text="Number"
                                FontSize="16"
                                Foreground="White"
-                               FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro"/>
+                               FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
                     <TextBox Height="25"
-                             Text="{Binding Container.ContainerNumber, UpdateSourceTrigger=PropertyChanged}"
+                             Text="{Binding Transport.TransportNumber, UpdateSourceTrigger=PropertyChanged}"
                              MaxLength="10"
                              Padding="5, 0"
                              VerticalContentAlignment="Center"
                              x:Name="TextBox_Number" />
 
-                    <TextBlock Text="Weight"
+                    <TextBlock Text="Name"
                                Margin="0, 20, 0, 0"
                                FontSize="16"
                                Foreground="White"
                                FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
                     <TextBox Height="25"
-                             Text="{Binding Container.ContainerWeight, UpdateSourceTrigger=PropertyChanged}"
+                             Text="{Binding Transport.Name, UpdateSourceTrigger=PropertyChanged}"
                              MaxLength="10"
                              Padding="5, 0"
                              VerticalContentAlignment="Center"
@@ -137,41 +155,21 @@
                               Padding="5, 0"
                               Background="White"
                               VerticalContentAlignment="Center"
-                              ItemsSource="{Binding ContainerTypes}"
-                              SelectedItem="{Binding Container.ContainerType}"
+                              ItemsSource="{Binding TransportTypes}"
+                              SelectedItem="{Binding Transport.TransportType}"
                               x:Name="ComboBox_Type" />
-
-                    <TextBlock Text="Status"
+                    
+                    <TextBlock Text="Capacity"
                                Margin="0, 20, 0, 0"
                                FontSize="16"
                                Foreground="White"
                                FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
-                    <ComboBox Height="25"
-                              Text="Status"
-                              Padding="5, 0"
-                              Background="White"
-                              VerticalContentAlignment="Center"
-                              ItemsSource="{Binding Statuses}"
-                              SelectedValue="{Binding Container.StatusId, Mode=TwoWay}"
-                              SelectedValuePath="Id"
-                              DisplayMemberPath="Name"
-                              x:Name="ComboBox_Status" />
-
-                    <TextBlock Text="Route"
-                               Margin="0, 20, 0, 0"
-                               FontSize="16"
-                               Foreground="White"
-                               FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
-                    <ComboBox Height="25"
-                              Text="Route"
-                              Padding="5, 0"
-                              Background="White"
-                              VerticalContentAlignment="Center"
-                              ItemsSource="{Binding Routes}"
-                              SelectedValue="{Binding Container.RouteId, Mode=TwoWay}"
-                              SelectedValuePath="Id"
-                              DisplayMemberPath="Display"
-                              x:Name="ComboBox_Route" />
+                    <TextBox Height="25"
+                             Text="{Binding Transport.Capacity, UpdateSourceTrigger=PropertyChanged}"
+                             MaxLength="1"
+                             Padding="5, 0"
+                             VerticalContentAlignment="Center"
+                             x:Name="TextBox_Capacity" />
                 </StackPanel>
             </Grid>
 
@@ -188,7 +186,7 @@
                         Style="{StaticResource DefaultButtonTheme}"
                         coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Plus-Icon-32px.png"
                         Command="{Binding AddCommand}"
-                        CommandParameter="{Binding Container}"
+                        CommandParameter="{Binding Transport}"
                         x:Name="Button_Add" />
 
                 <Button Content="Update"
@@ -199,7 +197,7 @@
                         Style="{StaticResource DefaultButtonTheme}"
                         coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Update-Icon-32px.png"
                         Command="{Binding UpdateCommand}"
-                        CommandParameter="{Binding SelectedContainer}"
+                        CommandParameter="{Binding SelectedTransport}"
                         x:Name="Button_Update" />
 
                 <Button Content="Delete"
@@ -210,7 +208,7 @@
                         Style="{StaticResource DefaultButtonTheme}"
                         coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Delete-Icon-32px.png"
                         Command="{Binding RemoveCommand}"
-                        CommandParameter="{Binding SelectedContainer}"
+                        CommandParameter="{Binding SelectedTransport}"
                         x:Name="Button_Delete" />
 
                 <Button Content="Clear"

@@ -1,4 +1,5 @@
-﻿using Catel.Data;
+﻿using System.Collections.ObjectModel;
+using Catel.Data;
 
 namespace PortBridgeShipping.MVVM.Models
 {
@@ -14,7 +15,7 @@ namespace PortBridgeShipping.MVVM.Models
         public Route Route { get; set; } = null!;   // Navigation Property
 
         // Transports
-        public ICollection<RouteSegmentTransport> SegmentTransports { get; set; } = new List<RouteSegmentTransport>();
+        public ObservableCollection<RouteSegmentTransport> SegmentTransports { get; set; } = new ObservableCollection<RouteSegmentTransport>();
 
 
         // Validation
