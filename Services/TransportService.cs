@@ -27,7 +27,7 @@ namespace PortBridgeShipping.Services
             db.Transports.Add(createTransport);
             db.SaveChanges();
 
-            return db.Transports.FirstOrDefault(t => t.Id == transport.Id);
+            return db.Transports.FirstOrDefault(t => t.Id == createTransport.Id);
         }
 
         public Transport? UpdateTransport(Transport transport, int id)

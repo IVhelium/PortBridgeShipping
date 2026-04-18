@@ -4,9 +4,282 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PortBridgeShipping.MVVM.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+             xmlns:viewModel="clr-namespace:PortBridgeShipping.MVVM.ViewModels"
+             xmlns:coreProp="clr-namespace:PortBridgeShipping.Core.DependencyProperties"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=viewModel:RoutesViewModel}"
+             d:DesignHeight="640"
+             d:DesignWidth="1200">
+    
+    <Border BorderBrush="LightGray"
+            BorderThickness="1">
+        
+        <TabControl Background="Transparent"
+                    BorderThickness="0">
+
+            <!-- ================= TAB 1 ================= -->
+            <TabItem Header="Routes Segments">
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="160" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto"
+                                              MinWidth="200"
+                                              MaxWidth="260" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="65" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Column="0"
+                                    Grid.Row="0"
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Center">
+
+                            <TextBox Grid.Column="0"
+                                     Grid.Row="0"
+                                     Width="200"
+                                     Height="40"
+                                     Text="{Binding SearchBoxText, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource SearchBoxTheme}"
+                                     coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Search-Icon-32px.png"
+                                     x:Name="TextBox_Search" />
+
+                            <ComboBox Grid.Column="0"
+                                      Grid.Row="0"
+                                      Margin="15, 0"
+                                      Width="140"
+                                      Height="25"
+                                      Background="White"
+                                      ItemsSource="{Binding Filters}"
+                                      SelectedItem="{Binding SelectedFilter}" />
+                        </StackPanel>
+
+                        <!-- Content Control -->
+                        <Grid Grid.Column="0"
+                              Grid.Row="1">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="350" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Routes -->
+                            <DataGrid Grid.Column="0"
+                                      Margin="15, 0, 0, 15"
+                                      Width="Auto"
+                                      MaxWidth="400"
+                                      AutoGenerateColumns="False"
+                                      IsReadOnly="True"
+                                      FontSize="13"
+                                      CanUserResizeColumns="False"
+                                      CanUserResizeRows="False"
+                                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                      ItemsSource="{Binding TransportSegments}"
+                                      SelectedItem="{Binding SelectedRoute}">
+
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Route"
+                                                        Width="Auto"
+                                                        MinWidth="130"
+                                                        Binding="{Binding Order}" />
+
+                                    <DataGridTextColumn Header="Segments"
+                                                        Width="*"
+                                                        MinWidth="150"
+                                                        Binding="{Binding Display}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                            <!-- Segments -->
+                            <DataGrid Grid.Column="1"
+                                      Margin="15, 0, 15, 15"
+                                      AutoGenerateColumns="False"
+                                      IsReadOnly="True"
+                                      FontSize="13"
+                                      CanUserResizeColumns="False"
+                                      CanUserResizeRows="False"
+                                      ItemsSource="{Binding Transports}"
+                                      SelectedItem="{Binding SelectedTransport}"
+                                      x:Name="DataGridView_Transports">
+
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Order"
+                                                        Width="Auto"
+                                                        MinWidth="100"
+                                                        Binding="{Binding Order}" />
+
+                                    <DataGridTextColumn Header="From"
+                                                        Width="Auto"
+                                                        MinWidth="180"
+                                                        Binding="{Binding From}" />
+
+                                    <DataGridTextColumn Header="To"
+                                                        Width="*"
+                                                        MinWidth="180"
+                                                        Binding="{Binding To}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+
+                        <!-- Control Panel -->
+                        <StackPanel Grid.Column="1"
+                                    Grid.Row="1"
+                                    Margin="0, 0, 15, 0"
+                                    Orientation="Vertical">
+
+                            <TextBlock Text="Number"
+                                       FontSize="16"
+                                       Foreground="White"
+                                       FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
+                            <TextBox Height="25"
+                                     Text="{Binding Transport.TransportNumber, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="8"
+                                     Padding="5, 0"
+                                     VerticalContentAlignment="Center"
+                                     x:Name="TextBox_Number" />
+
+                            <TextBlock Text="Name"
+                                       Margin="0, 20, 0, 0"
+                                       FontSize="16"
+                                       Foreground="White"
+                                       FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
+                            <TextBox Height="25"
+                                     Text="{Binding Transport.Name, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="8"
+                                     Padding="5, 0"
+                                     VerticalContentAlignment="Center"
+                                     x:Name="TextBox_Weight" />
+
+                            <TextBlock Text="Type"
+                                       Margin="0, 20, 0, 0"
+                                       FontSize="16"
+                                       Foreground="White"
+                                       FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
+                            <ComboBox Height="25"
+                                      Text="Type"
+                                      Padding="5, 0"
+                                      Background="White"
+                                      VerticalContentAlignment="Center"
+                                      ItemsSource="{Binding TransportTypes}"
+                                      SelectedItem="{Binding Transport.TransportType}"
+                                      x:Name="ComboBox_Type" />
+
+                            <TextBlock Text="Capacity"
+                                       Margin="0, 20, 0, 0"
+                                       FontSize="16"
+                                       Foreground="White"
+                                       FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
+                            <TextBox Height="25"
+                                     Text="{Binding Transport.Capacity, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="8"
+                                     Padding="5, 0"
+                                     VerticalContentAlignment="Center"
+                                     x:Name="TextBox_Capacity" />
+                        </StackPanel>
+                    </Grid>
+                    
+                    <!-- Buttons Section -->
+                    <StackPanel Grid.Column="1"
+                                Orientation="Vertical"
+                                Background="#bba9c9">
+
+                        <Button Content="Add"
+                                Height="35"
+                                FontSize="17"
+                                Foreground="White"
+                                Margin="0, 55, 0, 0"
+                                Style="{StaticResource DefaultButtonTheme}"
+                                coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Plus-Icon-32px.png"
+                                Command="{Binding AddCommand}"
+                                CommandParameter="{Binding Transport}"
+                                x:Name="Button_Add" />
+
+                        <Button Content="Update"
+                                Height="35px"
+                                FontSize="17px"
+                                Foreground="White"
+                                Margin="0, 20, 0, 0"
+                                Style="{StaticResource DefaultButtonTheme}"
+                                coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Update-Icon-32px.png"
+                                Command="{Binding UpdateCommand}"
+                                CommandParameter="{Binding SelectedTransport}"
+                                x:Name="Button_Update" />
+
+                        <Button Content="Delete"
+                                Height="35"
+                                FontSize="17"
+                                Foreground="White"
+                                Margin="0, 20, 0, 0"
+                                Style="{StaticResource DefaultButtonTheme}"
+                                coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Delete-Icon-32px.png"
+                                Command="{Binding RemoveCommand}"
+                                CommandParameter="{Binding SelectedTransport}"
+                                x:Name="Button_Delete" />
+
+                        <Label Height="1"
+                               Margin="0, 20, 0, 0"
+                               Background="White"/>
+                        
+                        <Button Content="Save Route"
+                                Height="35"
+                                FontSize="17"
+                                Foreground="White"
+                                Margin="0, 20, 0, 0"
+                                Style="{StaticResource DefaultButtonTheme}"
+                                coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Save-Icon-32px.png"
+                                Command="{Binding RemoveCommand}"
+                                CommandParameter="{Binding SelectedTransport}"
+                                x:Name="Button_Save" />
+                        
+                        <Button Content="Clear"
+                                Height="35"
+                                FontSize="17"
+                                Foreground="White"
+                                Margin="0, 145, 0, 0"
+                                Style="{StaticResource DefaultButtonTheme}"
+                                coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Trash-Icon-32px.png"
+                                Command="{Binding ClearCommand}"
+                                x:Name="Button_Clear" />
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <!-- ================= TAB 2 ================= -->
+            <TabItem Header="Transport Binding">
+
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Segments -->
+                    <ListBox ItemsSource="{Binding Segments}"
+                             SelectedItem="{Binding SelectedSegment}" />
+
+                    <!-- Transports -->
+                    <StackPanel Grid.Column="1">
+
+                        <ListBox ItemsSource="{Binding Transports}"
+                                 SelectedItem="{Binding SelectedTransport}" />
+
+                        <Button Content="Bind Transport"
+                                Command="{Binding AddTransportToSegmentCommand}" />
+                    </StackPanel>
+
+                </Grid>
+
+            </TabItem>
+
+        </TabControl>
+    </Border>
 </UserControl>

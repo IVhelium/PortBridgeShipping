@@ -39,6 +39,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
             TransportTypes = Enum.GetValues<TransportType>();
             Filters = Enum.GetValues<TransportFilter>();
+            TransportFilterTypes = Enum.GetValues<TransportFilterType>();
 
             LoadData();
         }
@@ -58,8 +59,9 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
         private readonly ICollectionView TransportView;
 
-        public IEnumerable<TransportType> TransportTypes { get; set; } = Enum.GetValues<TransportType>();
-        public IEnumerable<TransportFilter> Filters { get; set; } = Enum.GetValues<TransportFilter>();
+        public IEnumerable<TransportType> TransportTypes { get; set; }
+        public IEnumerable<TransportFilter> Filters { get; set; }
+        public IEnumerable<TransportFilterType> TransportFilterTypes { get; set; }
         public ObservableCollection<Transport> Transports { get; set; } = [];
         public ObservableCollection<RouteSegment> TransportSegments { get; set; } = [];
 
@@ -133,8 +135,8 @@ namespace PortBridgeShipping.MVVM.ViewModels
         }
 
         // ComboBox Selected Type Filter
-        private TransportType? _selectedType;
-        public TransportType? SelectedType
+        private TransportFilterType? _selectedType = TransportFilterType.All;
+        public TransportFilterType? SelectedType
         {
             get { return _selectedType; }
             set
@@ -270,12 +272,17 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
         private bool FilterTransportType(object? obj)
         {
-            if (SelectedType == null) return true;
+            if (SelectedType == null || SelectedType == TransportFilterType.All) return true;
 
             var transport = obj as Transport;
             if (transport == null) return false;
 
-            return transport.TransportType == SelectedType;
+            return SelectedType switch
+            {
+                TransportFilterType.Truck => transport.TransportType == TransportType.Truck,
+                TransportFilterType.Ship => transport.TransportType == TransportType.Ship,
+                _ => true
+            };
         }
 
         private bool FilterTransport(object? obj)

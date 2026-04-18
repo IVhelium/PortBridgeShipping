@@ -24,7 +24,8 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto"
-                                      MinWidth="200" />
+                                      MinWidth="200"
+                                      MaxWidth="260"/>
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
@@ -63,7 +64,7 @@
                               Width="140"
                               Height="25"
                               Background="White"
-                              ItemsSource="{Binding TransportTypes}"
+                              ItemsSource="{Binding TransportFilterTypes}"
                               SelectedItem="{Binding SelectedType}" />
                 </StackPanel>
 
@@ -111,8 +112,32 @@
                     </DataGrid>
 
                     <ListBox Grid.Row="1"
-                             Margin="15">
+                             Margin="15"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             ItemsSource="{Binding TransportSegments}">
 
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border>
+                                    <StackPanel>
+
+                                        <TextBlock FontSize="14"
+                                                   FontWeight="Bold"
+                                                   FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" 
+                                                   Text="{Binding Order, StringFormat=Segment #{0}}"/>
+
+                                        <TextBlock FontSize="14"
+                                                   FontWeight="Bold"
+                                                   FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro"
+                                                   Margin="10, 2">
+                                            <Run Text="{Binding From}"/>
+                                            <Run Text=" -> "/>
+                                            <Run Text="{Binding To}"/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>    
+                        </ListBox.ItemTemplate>
                     </ListBox>
                 </Grid>
 
@@ -128,7 +153,7 @@
                                FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
                     <TextBox Height="25"
                              Text="{Binding Transport.TransportNumber, UpdateSourceTrigger=PropertyChanged}"
-                             MaxLength="10"
+                             MaxLength="8"
                              Padding="5, 0"
                              VerticalContentAlignment="Center"
                              x:Name="TextBox_Number" />
@@ -140,7 +165,7 @@
                                FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
                     <TextBox Height="25"
                              Text="{Binding Transport.Name, UpdateSourceTrigger=PropertyChanged}"
-                             MaxLength="10"
+                             MaxLength="8"
                              Padding="5, 0"
                              VerticalContentAlignment="Center"
                              x:Name="TextBox_Weight" />
@@ -166,7 +191,7 @@
                                FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
                     <TextBox Height="25"
                              Text="{Binding Transport.Capacity, UpdateSourceTrigger=PropertyChanged}"
-                             MaxLength="1"
+                             MaxLength="8"
                              Padding="5, 0"
                              VerticalContentAlignment="Center"
                              x:Name="TextBox_Capacity" />

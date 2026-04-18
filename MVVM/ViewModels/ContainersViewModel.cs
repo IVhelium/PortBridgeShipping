@@ -60,8 +60,8 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
         private readonly ICollectionView ContainersView;
 
-        public IEnumerable<ContainerType> ContainerTypes { get; set; } = Enum.GetValues<ContainerType>();   // Get all elements automaticaly
-        public IEnumerable<ContainerFilter> Filters { get; set; } = Enum.GetValues<ContainerFilter>();
+        public IEnumerable<ContainerType> ContainerTypes { get; set; }
+        public IEnumerable<ContainerFilter> Filters { get; set; }
         public ObservableCollection<Status> Statuses { get; set; } = [];
         public ObservableCollection<Route> Routes { get; set; } = [];
         public ObservableCollection<Container> Containers { get; set; } = [];
