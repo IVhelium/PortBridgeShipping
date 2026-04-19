@@ -11,6 +11,7 @@ namespace PortBridgeShipping.Services
             using var db = new ApplicationDbContext();
 
             return db.Routes
+                   .AsNoTracking()
                    .Include(r => r.Segments)
                    .ToList();
         }

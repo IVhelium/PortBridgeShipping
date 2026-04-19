@@ -15,7 +15,7 @@
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="40" />
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
                             <Image Grid.Column="0"
@@ -27,6 +27,7 @@
 
                             <TextBlock Grid.Column="1"
                                        Text="{TemplateBinding Property=Content}"
+                                       HorizontalAlignment="Center"
                                        VerticalAlignment="Center"
                                        FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro"
                                        Margin="20, 0, 0, 0" />

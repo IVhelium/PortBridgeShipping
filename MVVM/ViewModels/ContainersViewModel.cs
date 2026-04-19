@@ -13,7 +13,6 @@ namespace PortBridgeShipping.MVVM.ViewModels
 {
     public class ContainersViewModel : ObservableObject
     {
-
         #region Services
 
         private readonly ContainerService _containerService = new();

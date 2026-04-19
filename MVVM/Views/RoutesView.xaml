@@ -1,8 +1,8 @@
 ﻿<UserControl x:Class="PortBridgeShipping.MVVM.Views.RoutesView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:PortBridgeShipping.MVVM.Views"
              xmlns:viewModel="clr-namespace:PortBridgeShipping.MVVM.ViewModels"
              xmlns:coreProp="clr-namespace:PortBridgeShipping.Core.DependencyProperties"
@@ -10,20 +10,19 @@
              d:DataContext="{d:DesignInstance Type=viewModel:RoutesViewModel}"
              d:DesignHeight="640"
              d:DesignWidth="1200">
-    
+
     <Border BorderBrush="LightGray"
             BorderThickness="1">
-        
+
         <TabControl Background="Transparent"
                     BorderThickness="0">
 
             <!-- ================= TAB 1 ================= -->
             <TabItem Header="Routes Segments">
-
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="160"/>
                     </Grid.ColumnDefinitions>
 
                     <Grid Grid.Column="0">
@@ -186,7 +185,7 @@
                                      x:Name="TextBox_Capacity" />
                         </StackPanel>
                     </Grid>
-                    
+
                     <!-- Buttons Section -->
                     <StackPanel Grid.Column="1"
                                 Orientation="Vertical"
@@ -227,8 +226,8 @@
 
                         <Label Height="1"
                                Margin="0, 20, 0, 0"
-                               Background="White"/>
-                        
+                               Background="White" />
+
                         <Button Content="Save Route"
                                 Height="35"
                                 FontSize="17"
@@ -239,7 +238,7 @@
                                 Command="{Binding RemoveCommand}"
                                 CommandParameter="{Binding SelectedTransport}"
                                 x:Name="Button_Save" />
-                        
+
                         <Button Content="Clear"
                                 Height="35"
                                 FontSize="17"
@@ -255,11 +254,10 @@
 
             <!-- ================= TAB 2 ================= -->
             <TabItem Header="Transport Binding">
-
-                <Grid Margin="10">
+                <Grid Margin="15">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
+                        <ColumnDefinition Width="500" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Segments -->
@@ -267,19 +265,29 @@
                              SelectedItem="{Binding SelectedSegment}" />
 
                     <!-- Transports -->
-                    <StackPanel Grid.Column="1">
+                    <Grid Grid.Column="1"
+                          Margin="15, 0, 0, 0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="50" />
+                        </Grid.RowDefinitions>
 
-                        <ListBox ItemsSource="{Binding Transports}"
+                        <ListBox Grid.Row="0"
+                                 Margin="0, 0, 0, 15"
+                                 ItemsSource="{Binding Transports}"
                                  SelectedItem="{Binding SelectedTransport}" />
 
-                        <Button Content="Bind Transport"
+                        <Button Grid.Row="1"
+                                Content="Bind Transport"
+                                FontSize="17px"
+                                Foreground="White"
+                                Background="#bba9c9"
+                                Style="{StaticResource DefaultButtonTheme}"
+                                coreProp:ImageIconProperties.IconSource="/Images/Icons/RoutesWindow/Chain-Icon-32px.png"
                                 Command="{Binding AddTransportToSegmentCommand}" />
-                    </StackPanel>
-
+                    </Grid>
                 </Grid>
-
             </TabItem>
-
         </TabControl>
     </Border>
 </UserControl>
