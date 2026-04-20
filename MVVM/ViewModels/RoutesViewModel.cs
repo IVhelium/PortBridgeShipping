@@ -1,8 +1,10 @@
 ﻿using PortBridgeShipping.Core;
+using PortBridgeShipping.Core.Collections.Enums;
 using PortBridgeShipping.MVVM.Models;
 using PortBridgeShipping.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace PortBridgeShipping.MVVM.ViewModels
@@ -22,10 +24,22 @@ namespace PortBridgeShipping.MVVM.ViewModels
         {
             #region Commands Invocation
 
-
+            AddCommand = new RelayCommand(Add, CanAdd);
+            UpdateCommand = new RelayCommand(Update, CanUpdate);
+            RemoveCommand = new RelayCommand(Remove, CanRemove);
+            ClearCommand = new RelayCommand(ClearForm);
 
             #endregion
 
+            Routes = new ObservableCollection<Route>();
+            RouteSegments = new ObservableCollection<RouteSegment>();
+            Transports = new ObservableCollection<Transport>();
+            RouteSegmentTransports = new ObservableCollection<RouteSegmentTransport>();
+
+            RoutesView = CollectionViewSource.GetDefaultView(Routes);
+            RouteSegmentsView = CollectionViewSource.GetDefaultView(RouteSegments);
+
+            ViewModes = Enum.GetValues<RouteViewMode>();
 
             LoadData();
         }
@@ -44,7 +58,9 @@ namespace PortBridgeShipping.MVVM.ViewModels
         #region Collections
 
         private readonly ICollectionView RoutesView;
+        private readonly ICollectionView RouteSegmentsView;
 
+        public IEnumerable<RouteViewMode> ViewModes { get; set; }
         public ObservableCollection<Route> Routes { get; set; } = [];
         public ObservableCollection<RouteSegment> RouteSegments { get; set; } = [];
         public ObservableCollection<Transport> Transports { get; set; } = [];
@@ -52,6 +68,8 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
         #endregion
 
+
+        #region Load Data Methods
 
         private void LoadData()
         {
@@ -77,8 +95,37 @@ namespace PortBridgeShipping.MVVM.ViewModels
                 RouteSegmentTransports.Add(rst);
         }
 
+        private void LoadSegmentsByRoute(int routeId)
+        {
+            RouteSegments.Clear();
+
+            var segments = _routeSegmentService.GetAllRouteSegments()
+                           .Where(rs => rs.RouteId == routeId)
+                           .OrderBy(rs => rs.Order);
+
+            foreach (var s in segments)
+                RouteSegments.Add(s);
+        }
+
+        #endregion
+
 
         #region Properties
+
+        // Edit Mode Value
+        private RouteViewMode _viewMode = RouteViewMode.Routes;
+        public RouteViewMode ViewMode
+        {
+            get { return _viewMode; }
+            set
+            {
+                _viewMode = value;
+                OnPropertyChanged();
+
+                CommandManager.InvalidateRequerySuggested();
+            }
+        }
+
 
         // Route Model Value
         private Route _route = new();
@@ -111,6 +158,8 @@ namespace PortBridgeShipping.MVVM.ViewModels
                         Id = _selectedRoute.Id,
                         Name = _selectedRoute.Name
                     };
+
+                    LoadSegmentsByRoute(_selectedRoute.Id);
                 }
 
                 CommandManager.InvalidateRequerySuggested();
@@ -152,11 +201,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
                         RouteId = _selectedRouteSegmnet.RouteId
                     };
 
-                    Route = new Route
-                    {
-                        Id = _selectedRouteSegmnet.RouteId,
-                        Name = _routeService.GetRouteById(_selectedRouteSegmnet.RouteId).ToString()
-                    };
+                    SelectedRoute = Routes.FirstOrDefault(r => r.Id == _selectedRouteSegmnet.RouteId);
                 }
 
                 CommandManager.InvalidateRequerySuggested();
@@ -206,45 +251,75 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
         #region Command Properties
 
+        private bool CanAdd(object? parameter)
+        {
+            return ViewMode switch
+            {
+                RouteViewMode.Routes => !string.IsNullOrWhiteSpace(Route.Name)
+                                        && SelectedRoute == null
+                                        && SelectedRouteSegment == null,
 
-        private bool CanSaveRoute(object? parameter)
+                RouteViewMode.RouteSegments => !string.IsNullOrWhiteSpace(RouteSegment.From)
+                                               && !string.IsNullOrWhiteSpace(RouteSegment.To)
+                                               && RouteSegment.RouteId > 0
+                                               && SelectedRoute != null
+                                               && SelectedRouteSegment == null,
+
+                _ => false
+            };
+        }
+
+        private void Add(object? parameter)
+        {
+            if (ViewMode == RouteViewMode.Routes)
+            {
+                Route route = new() { Name = Route.Name };
+
+                var createdRoute = _routeService.CreateRoute(route);
+
+                if (createdRoute != null) Routes.Add(createdRoute);
+            }
+            else
+            {
+                if (SelectedRoute == null) return;
+
+                RouteSegment.RouteId = SelectedRoute.Id;
+
+                RouteSegment routeSegment = new()
+                {
+
+                };
+            }
+
+            ClearForm(null);
+        }
+
+        private bool CanUpdate(object? parameter)
         {
             return true;
         }
 
-        private void SaveRoute(object? parameter)
+        private void Update(object? parameter)
         {
 
         }
 
-        private bool CanAddSegment(object? parameter)
+        private bool CanRemove(object? parameter)
         {
             return true;
         }
 
-        private void AddSegment(object? parameter)
+        private void Remove(object? parameter)
         {
 
         }
 
-        private bool CanUpdateSegment(object? parameter)
+        private void ClearForm(object? parameter)
         {
-            return true;
-        }
-
-        private void UpdateSegment(object? parameter)
-        {
-
-        }
-
-        private bool CanRemoveSegment(object? parameter)
-        {
-            return true;
-        }
-
-        private void RemoveSegment(object? parameter)
-        {
-
+            Route = new Route();
+            RouteSegment = new RouteSegment();
+            SelectedRoute = null;
+            SelectedRouteSegment = null;
         }
 
         #endregion

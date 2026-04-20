@@ -3,6 +3,6 @@
     public enum RouteViewMode
     {
         Routes,
-        RouteSegment
+        RouteSegments
     }
 }

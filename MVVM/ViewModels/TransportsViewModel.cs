@@ -181,7 +181,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
         private bool CanAddTransport(object? parameter)
         {
             return Transport.TransportNumber > 0 &&
-                   Transport.Name != string.Empty &&
+                   !string.IsNullOrWhiteSpace(Transport.Name) &&
                    Transport.Capacity > 0 &&
                    SelectedTransport == null &&
                    !_transportService.Exist(Transport.TransportNumber);
