@@ -1,9 +1,9 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows.Input;
-using PortBridgeShipping.Core;
+﻿using PortBridgeShipping.Core;
 using PortBridgeShipping.MVVM.Models;
 using PortBridgeShipping.Services;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows.Input;
 
 namespace PortBridgeShipping.MVVM.ViewModels
 {
@@ -15,7 +15,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
         private readonly RouteSegmentService _routeSegmentService = new();
         private readonly TransportService _transportService = new();
         private readonly RouteSegmentTransportService _routeSegmentTransportService = new();
-        
+
         #endregion
 
         public RoutesViewModel()
@@ -108,12 +108,143 @@ namespace PortBridgeShipping.MVVM.ViewModels
                 {
                     Route = new Route
                     {
-
+                        Id = _selectedRoute.Id,
+                        Name = _selectedRoute.Name
                     };
                 }
 
                 CommandManager.InvalidateRequerySuggested();
             }
+        }
+
+        // RouteSegment Model Value
+        private RouteSegment _routeSegment = new();
+        public RouteSegment RouteSegment
+        {
+            get { return _routeSegment; }
+            set
+            {
+                _routeSegment = value;
+                OnPropertyChanged();
+
+                CommandManager.InvalidateRequerySuggested();
+            }
+        }
+
+        // Selected RouteSegment Value
+        private RouteSegment? _selectedRouteSegmnet;
+        public RouteSegment? SelectedRouteSegment
+        {
+            get { return _selectedRouteSegmnet; }
+            set
+            {
+                _selectedRouteSegmnet = value;
+                OnPropertyChanged();
+
+                if (_selectedRouteSegmnet != null)
+                {
+                    RouteSegment = new RouteSegment
+                    {
+                        Id = _selectedRouteSegmnet.Id,
+                        Order = _selectedRouteSegmnet.Order,
+                        From = _selectedRouteSegmnet.From,
+                        To = _selectedRouteSegmnet.To,
+                        RouteId = _selectedRouteSegmnet.RouteId
+                    };
+
+                    Route = new Route
+                    {
+                        Id = _selectedRouteSegmnet.RouteId,
+                        Name = _routeService.GetRouteById(_selectedRouteSegmnet.RouteId).ToString()
+                    };
+                }
+
+                CommandManager.InvalidateRequerySuggested();
+            }
+        }
+
+        // Transport Model Value
+        private Transport _transport = new();
+        public Transport Transport
+        {
+            get { return _transport; }
+            set
+            {
+                _transport = value;
+                OnPropertyChanged();
+
+                CommandManager.InvalidateRequerySuggested();
+            }
+        }
+
+        // Selected Transport Value
+        private Transport? _selectedTranspor;
+        public Transport? SelectedTrnasport
+        {
+            get { return _selectedTranspor; }
+            set
+            {
+                _selectedTranspor = value;
+                OnPropertyChanged();
+
+                if (_selectedTranspor != null)
+                {
+                    Transport = new Transport
+                    {
+                        Id = _selectedTranspor.Id,
+                        TransportNumber = _selectedTranspor.TransportNumber,
+                        Name = _selectedTranspor.Name,
+                        TransportType = _selectedTranspor.TransportType,
+                        Capacity = _selectedTranspor.Capacity
+                    };
+                }
+            }
+        }
+
+        #endregion
+
+
+        #region Command Properties
+
+
+        private bool CanSaveRoute(object? parameter)
+        {
+            return true;
+        }
+
+        private void SaveRoute(object? parameter)
+        {
+
+        }
+
+        private bool CanAddSegment(object? parameter)
+        {
+            return true;
+        }
+
+        private void AddSegment(object? parameter)
+        {
+
+        }
+
+        private bool CanUpdateSegment(object? parameter)
+        {
+            return true;
+        }
+
+        private void UpdateSegment(object? parameter)
+        {
+
+        }
+
+        private bool CanRemoveSegment(object? parameter)
+        {
+            return true;
+        }
+
+        private void RemoveSegment(object? parameter)
+        {
+
         }
 
         #endregion

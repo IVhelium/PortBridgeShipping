@@ -16,6 +16,15 @@ namespace PortBridgeShipping.Services
                    .ToList();
         }
 
+        public Route? GetRouteById(int id)
+        {
+            using var db = new ApplicationDbContext();
+
+            return db.Routes
+                   .Include(r => r.Segments)
+                   .FirstOrDefault(r => r.Id == id);
+        }
+
         public Route? CreateRoute(Route route)
         {
             using var db = new ApplicationDbContext();
