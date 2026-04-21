@@ -6,6 +6,21 @@ namespace PortBridgeShipping.Services
 {
     public class RouteSegmentService
     {
+        private void ReOrderSegments(ApplicationDbContext db, int routeId)
+        {
+            var segments = db.RouteSegments
+                           .Where(rs => rs.RouteId == routeId)
+                           .OrderBy(rs => rs.Order)
+                           .ToList();
+
+            for (int i = 0; i < segments.Count; i++)
+            {
+                segments[i].Order = i + 1;
+
+                if (i > 0) segments[i].From = segments[i - 1].To;
+            }
+        }
+
         public List<RouteSegment> GetAllRouteSegments()
         {
             using var db = new ApplicationDbContext();
@@ -60,26 +75,9 @@ namespace PortBridgeShipping.Services
 
             if (routeSegmentExist == null) return null;
 
-            var segments = db.RouteSegments
-                .Where(rs => rs.RouteId == routeSegment.RouteId)
-                .OrderBy(rs => rs.Order)
-                .ToList();
-
-            if (routeSegmentExist.Order > 1)
-            {
-                var prevSegment = segments.First(rs => rs.Order == routeSegment.Order - 1);
-
-                if (routeSegment.From != prevSegment.To) return null;
-            }
-
-            var nextSegment = segments.First(rs => rs.Order == routeSegment.Order + 1);
-
-            if (nextSegment != null)
-                if (nextSegment.From != routeSegment.To) return null;
-
-            routeSegmentExist.From = routeSegment.From;
             routeSegmentExist.To = routeSegment.To;
-            routeSegmentExist.RouteId = routeSegment.RouteId;
+
+            ReOrderSegments(db, routeSegmentExist.RouteId);
 
             db.SaveChanges();
 
@@ -97,20 +95,8 @@ namespace PortBridgeShipping.Services
             if (routeSegmentExist == null) return false;
 
             db.RouteSegments.Remove(routeSegmentExist);
-            db.SaveChanges();
 
-            var segments = db.RouteSegments
-                .Where(rs => rs.RouteId == routeSegmentExist.RouteId)
-                .OrderBy(rs => rs.Order)
-                .ToList();
-
-            // Логика переномерации сегментов после удаления
-            for (int i = 0; i < segments.Count; i++)
-            {
-                segments[i].Order = i + 1;
-
-                if (i > 0) segments[i].From = segments[i - 1].To;
-            }
+            ReOrderSegments(db, routeSegmentExist.RouteId);
 
             db.SaveChanges();
 

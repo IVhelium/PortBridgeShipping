@@ -232,21 +232,6 @@
                                 CommandParameter="{Binding SelectedTransport}"
                                 x:Name="Button_Delete" />
 
-                        <Label Height="1"
-                               Margin="0, 20, 0, 0"
-                               Background="White" />
-
-                        <Button Content="Save Route"
-                                Height="35"
-                                FontSize="17"
-                                Foreground="White"
-                                Margin="0, 20, 0, 0"
-                                Style="{StaticResource DefaultButtonTheme}"
-                                coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Save-Icon-32px.png"
-                                Command="{Binding RemoveCommand}"
-                                CommandParameter="{Binding SelectedTransport}"
-                                x:Name="Button_Save" />
-
                         <Button Content="Clear"
                                 Height="35"
                                 FontSize="17"
