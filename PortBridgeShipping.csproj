@@ -19,6 +19,7 @@
     <None Remove="Images\Icons\MainWindow\Route-Icon-32px.png" />
     <None Remove="Images\Icons\MainWindow\Ship-Icon-32px.png" />
     <None Remove="Images\Icons\MainWindow\Truck-Icon-32px.png" />
+    <None Remove="Images\Icons\RoutesWindow\Chain-Icon-32px.png" />
     <None Remove="Images\New_Logo_PortBridge_Shipping.png" />
     <None Remove="Images\Plus-Icon-16px.png" />
     <None Remove="Images\Update-Icon-16px.png" />
@@ -60,6 +61,7 @@
     <Resource Include="Images\Icons\MainWindow\Route-Icon-32px.png" />
     <Resource Include="Images\Icons\MainWindow\Ship-Icon-32px.png" />
     <Resource Include="Images\Icons\MainWindow\Truck-Icon-32px.png" />
+    <Resource Include="Images\Icons\RoutesWindow\Chain-Icon-32px.png" />
     <Resource Include="Images\Logo\New_Logo_PortBridge_Shipping.png" />
   </ItemGroup>
 

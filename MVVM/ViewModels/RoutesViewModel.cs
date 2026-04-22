@@ -1,6 +1,8 @@
 ﻿using PortBridgeShipping.Core;
 using PortBridgeShipping.Core.Collections.Enums;
+using PortBridgeShipping.Core.Collections.Enums.Filters;
 using PortBridgeShipping.MVVM.Models;
+using PortBridgeShipping.MVVM.Views;
 using PortBridgeShipping.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -38,7 +40,10 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
             RoutesView = CollectionViewSource.GetDefaultView(Routes);
             RouteSegmentsView = CollectionViewSource.GetDefaultView(RouteSegments);
+            RoutesView.Filter = FilterRoutes;
+            RouteSegmentsView.Filter = FilterRouteSegments;
 
+            Filters = Enum.GetValues<RouteFilter>();
             ViewModes = Enum.GetValues<RouteViewMode>();
 
             LoadData();
@@ -60,6 +65,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
         private readonly ICollectionView RoutesView;
         private readonly ICollectionView RouteSegmentsView;
 
+        public IEnumerable<RouteFilter> Filters { get; set; }
         public IEnumerable<RouteViewMode> ViewModes { get; set; }
         public ObservableCollection<Route> Routes { get; set; } = [];
         public ObservableCollection<RouteSegment> RouteSegments { get; set; } = [];
@@ -246,6 +252,36 @@ namespace PortBridgeShipping.MVVM.ViewModels
             }
         }
 
+        // SearchBox Value
+        private string? _searchBoxText;
+        public string? SearchBoxText
+        {
+            get { return _searchBoxText; }
+            set
+            {
+                _searchBoxText = value;
+                OnPropertyChanged();
+
+                RoutesView.Refresh();   // Обновление Вьев при каждом изменении данного свойства
+                RouteSegmentsView.Refresh();
+            }
+        }
+
+        // ComboBox Filters Value
+        private RouteFilter _selectedFilter;
+        public RouteFilter SelectedFilter
+        {
+            get { return _selectedFilter; }
+            set
+            {
+                _selectedFilter = value;
+                OnPropertyChanged();
+
+                RoutesView.Refresh();
+                RouteSegmentsView.Refresh();   // Обновление Вьев при каждом изменении данного свойства
+            }
+        }
+
         #endregion
 
 
@@ -352,6 +388,9 @@ namespace PortBridgeShipping.MVVM.ViewModels
                 LoadSegmentsByRoute(SelectedRoute.Id);
             }
 
+            RoutesView.Refresh();
+            RouteSegmentsView.Refresh();
+
             ClearForm(null);
         }
 
@@ -398,6 +437,41 @@ namespace PortBridgeShipping.MVVM.ViewModels
             RouteSegment = new RouteSegment();
             SelectedRoute = null;
             SelectedRouteSegment = null;
+        }
+
+        #endregion
+
+
+        #region Search Filters
+
+        private bool FilterRoutes(object? obj)
+        {
+            if (string.IsNullOrWhiteSpace(SearchBoxText)) return true;    // Если серч бокс пустой просто игнорируем поиск
+
+            var route = obj as Route;
+            if (route == null) return false;
+
+            return SelectedFilter switch
+            {
+                RouteFilter.RouteName => route.Name.Contains(SearchBoxText, StringComparison.OrdinalIgnoreCase),
+                _ => true
+            };
+        }
+
+        private bool FilterRouteSegments(object? obj)
+        {
+            if (string.IsNullOrWhiteSpace(SearchBoxText)) return true;
+
+            var routeSegment = obj as RouteSegment;
+            if (routeSegment == null) return false;
+
+            return SelectedFilter switch
+            {
+                RouteFilter.From => routeSegment.From.Contains(SearchBoxText, StringComparison.OrdinalIgnoreCase),
+                RouteFilter.To => routeSegment.To.Contains(SearchBoxText, StringComparison.OrdinalIgnoreCase),
+                RouteFilter.Route => routeSegment.Route.Display.Contains(SearchBoxText, StringComparison.OrdinalIgnoreCase),
+                _ => true
+            };
         }
 
         #endregion
