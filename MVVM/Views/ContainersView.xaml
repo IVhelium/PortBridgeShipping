@@ -94,7 +94,7 @@
                         <DataGridTextColumn Header="Route"
                                             Width="*"
                                             MinWidth="150"
-                                            Binding="{Binding Route.Display}" />
+                                            Binding="{Binding Route.Name}" />
                     </DataGrid.Columns>
                 </DataGrid>
 

@@ -57,6 +57,8 @@ namespace PortBridgeShipping.Services
             }
             else createRouteSegment.From = segments.Last().To;
 
+            ReOrderSegments(db, createRouteSegment.RouteId);
+
             db.RouteSegments.Add(createRouteSegment);
             db.SaveChanges();
 

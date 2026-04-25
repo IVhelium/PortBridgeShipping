@@ -36,29 +36,5 @@ namespace PortBridgeShipping.MVVM.Models
                 }
             }
         }
-
-
-        // Design output
-        [NotMapped]
-        public string Display
-        {
-            get
-            {
-                if (Segments == null || Segments.Count == 0) return Name;
-
-                var order = Segments.OrderBy(s => s.Order).ToList();    // Сортировка сегментов по порядку
-
-                // From -> To
-                var segment = order.Select(s => s.From).ToList();
-                segment.Add(order.Last().To);                           // Возвращает последний элемент
-
-                return string.Join(" -> ", segment);
-            }
-        }
-
-        public override string ToString()
-        {
-            return Display;
-        }
     }
 }

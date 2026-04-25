@@ -67,7 +67,9 @@
                                       Height="25"
                                       Background="White"
                                       ItemsSource="{Binding ViewModes}"
-                                      SelectedItem="{Binding SelectedViewMode}"/>
+                                      SelectedItem="{Binding SelectedViewMode}"
+                                      SelectionChanged="ComboBox_ViewMode_SelectionChanged"
+                                      x:Name="ComboBox_ViewMode"/>
                         </StackPanel>
 
                         <!-- Content Control -->
@@ -94,10 +96,14 @@
                                       SelectedItem="{Binding SelectedRoute}">
 
                                 <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Id"
+                                                        Width="80"
+                                                        Binding="{Binding Id}"/>
+                                    
                                     <DataGridTextColumn Header="Route"
                                                         Width="*"
                                                         MinWidth="150"
-                                                        Binding="{Binding Display}" />
+                                                        Binding="{Binding Name}" />
                                 </DataGrid.Columns>
                             </DataGrid>
 
@@ -121,17 +127,17 @@
 
                                     <DataGridTextColumn Header="From"
                                                         Width="Auto"
-                                                        MinWidth="120"
+                                                        MinWidth="140"
                                                         Binding="{Binding From}" />
 
                                     <DataGridTextColumn Header="To"
                                                         Width="Auto"
-                                                        MinWidth="120"
+                                                        MinWidth="140"
                                                         Binding="{Binding To}" />
 
                                     <DataGridTextColumn Header="Route"
                                                         Width="*"
-                                                        Binding="{Binding Route}"/>
+                                                        Binding="{Binding RouteId}"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Grid>
@@ -150,24 +156,11 @@
                                      Text="{Binding Route.Name, UpdateSourceTrigger=PropertyChanged}"
                                      Padding="5, 0"
                                      VerticalContentAlignment="Center"
-                                     x:Name="TextBox_Number" />
+                                     x:Name="TextBox_Name" />
 
                             <Label Height="1"
                                    Margin="10, 15"
                                    Background="White"/>
-
-                            <TextBlock Text="Order"
-                                       Margin="0, 20, 0, 0"
-                                       FontSize="16"
-                                       Foreground="White"
-                                       FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
-                            <TextBox Height="25"
-                                     Text="{Binding RouteSegment.Order, UpdateSourceTrigger=PropertyChanged}"
-                                     MaxLength="8"
-                                     Padding="5, 0"
-                                     VerticalContentAlignment="Center"
-                                     IsReadOnly="True"
-                                     x:Name="TextBox_Order" />
 
                             <TextBlock Text="From"
                                        Margin="0, 20, 0, 0"
@@ -176,7 +169,7 @@
                                        FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
                             <TextBox Height="25"
                                      Text="{Binding RouteSegment.From, UpdateSourceTrigger=PropertyChanged}"
-                                     MaxLength="8"
+                                     MaxLength="20"
                                      Padding="5, 0"
                                      VerticalContentAlignment="Center"
                                      x:Name="TextBox_From" />
@@ -188,7 +181,7 @@
                                        FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
                             <TextBox Height="25"
                                      Text="{Binding RouteSegment.To, UpdateSourceTrigger=PropertyChanged}"
-                                     MaxLength="8"
+                                     MaxLength="20"
                                      Padding="5, 0"
                                      VerticalContentAlignment="Center"
                                      x:Name="TextBox_To" />
@@ -198,7 +191,8 @@
                     <!-- Buttons Section -->
                     <StackPanel Grid.Column="1"
                                 Orientation="Vertical"
-                                Background="#bba9c9">
+                                Background="#bba9c9"
+                                x:Name="StackPanel_Route">
 
                         <Button Content="Add"
                                 Height="35"
@@ -209,7 +203,7 @@
                                 coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Plus-Icon-32px.png"
                                 Command="{Binding AddCommand}"
                                 CommandParameter="{Binding Routes}"
-                                x:Name="Button_Add" />
+                                x:Name="Button_Add_Route" />
 
                         <Button Content="Update"
                                 Height="35px"
@@ -220,7 +214,7 @@
                                 coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Update-Icon-32px.png"
                                 Command="{Binding UpdateCommand}"
                                 CommandParameter="{Binding SelectedRoute}"
-                                x:Name="Button_Update" />
+                                x:Name="Button_Update_Route" />
 
                         <Button Content="Delete"
                                 Height="35"
@@ -231,7 +225,8 @@
                                 coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Delete-Icon-32px.png"
                                 Command="{Binding RemoveCommand}"
                                 CommandParameter="{Binding SelectedRoute}"
-                                x:Name="Button_Delete" />
+                                x:Name="Button_Delete_Route" />
+
 
                         <Button Content="Clear"
                                 Height="35"
@@ -243,43 +238,281 @@
                                 Command="{Binding ClearCommand}"
                                 x:Name="Button_Clear" />
                     </StackPanel>
+
+                    <StackPanel Grid.Column="1"
+                                Orientation="Vertical"
+                                Background="#bba9c9"
+                                IsEnabled="False"
+                                Visibility="Hidden"
+                                x:Name="StackPanel_Segment">
+                        
+                        <Button Content="Add"
+                                Height="35"
+                                FontSize="17"
+                                Foreground="White"
+                                Margin="0, 55, 0, 0"
+                                Style="{StaticResource DefaultButtonTheme}"
+                                coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Plus-Icon-32px.png"
+                                Command="{Binding AddCommand}"
+                                CommandParameter="{Binding RouteSegments}"
+                                x:Name="Button_Add_Segment" />
+
+                        <Button Content="Update"
+                                Height="35px"
+                                FontSize="17px"
+                                Foreground="White"
+                                Margin="0, 20, 0, 0"
+                                Style="{StaticResource DefaultButtonTheme}"
+                                coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Update-Icon-32px.png"
+                                Command="{Binding UpdateCommand}"
+                                CommandParameter="{Binding SelectedRouteSegment}"
+                                x:Name="Button_Update_Segment" />
+
+                        <Button Content="Delete"
+                                Height="35"
+                                FontSize="17"
+                                Foreground="White"
+                                Margin="0, 20, 0, 0"
+                                Style="{StaticResource DefaultButtonTheme}"
+                                coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Delete-Icon-32px.png"
+                                Command="{Binding RemoveCommand}"
+                                CommandParameter="{Binding SelectedRouteSegment}"
+                                x:Name="Button_Delete_Segment" />
+
+                        <Button Content="Clear"
+                                Height="35"
+                                FontSize="17"
+                                Foreground="White"
+                                Margin="0, 145, 0, 0"
+                                Style="{StaticResource DefaultButtonTheme}"
+                                coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Trash-Icon-32px.png"
+                                Command="{Binding ClearCommand}"
+                                x:Name="Button_Clear_Segment" />
+                    </StackPanel>
                 </Grid>
             </TabItem>
 
             <!-- ================= TAB 2 ================= -->
             <TabItem Header="Transport Binding">
-                <Grid Margin="15">
+                <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="500" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="160" />
                     </Grid.ColumnDefinitions>
 
-                    <!-- Segments -->
-                    <ListBox ItemsSource="{Binding RouteSegments}"
-                             SelectedItem="{Binding SelectedRouteSegment}" />
+                    <Grid Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto"
+                                              MinWidth="200"
+                                              MaxWidth="260" />
+                        </Grid.ColumnDefinitions>
 
-                    <!-- Transports -->
-                    <Grid Grid.Column="1"
-                          Margin="15, 0, 0, 0">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="65" />
                             <RowDefinition Height="*" />
-                            <RowDefinition Height="50" />
                         </Grid.RowDefinitions>
 
-                        <ListBox Grid.Row="0"
-                                 Margin="0, 0, 0, 15"
-                                 ItemsSource="{Binding Transports}"
-                                 SelectedItem="{Binding SelectedTrnasport}" />
+                        <StackPanel Grid.Column="0"
+                                    Grid.Row="0"
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Center">
 
-                        <Button Grid.Row="1"
-                                Content="Bind Transport"
+                            <TextBox Grid.Column="0"
+                                     Grid.Row="0"
+                                     Width="200"
+                                     Height="40"
+                                     Text="{Binding SearchBoxText, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource SearchBoxTheme}"
+                                     coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Search-Icon-32px.png"
+                                     x:Name="TextBox_Search" />
+
+                            <ComboBox Grid.Column="0"
+                                      Grid.Row="0"
+                                      Margin="15, 0"
+                                      Width="140"
+                                      Height="25"
+                                      Background="White"
+                                      ItemsSource="{Binding Filters}"
+                                      SelectedItem="{Binding SelectedFilter}" />
+
+                            <ComboBox Grid.Column="0"
+                                      Grid.Row="0"
+                                      Width="140"
+                                      Height="25"
+                                      Background="White"
+                                      ItemsSource="{Binding ViewModes}"
+                                      SelectedItem="{Binding SelectedViewMode}"
+                                      SelectionChanged="ComboBox_ViewMode_SelectionChanged"
+                                      x:Name="ComboBox_ViewMode" />
+                        </StackPanel>
+
+                        <!-- Content Control -->
+                        <Grid Grid.Column="0"
+                              Grid.Row="1">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="350" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Routes -->
+                            <DataGrid Grid.Column="0"
+                                      Margin="15, 0, 0, 15"
+                                      Width="Auto"
+                                      MaxWidth="400"
+                                      AutoGenerateColumns="False"
+                                      IsReadOnly="True"
+                                      FontSize="13"
+                                      CanUserResizeColumns="False"
+                                      CanUserResizeRows="False"
+                                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                      ItemsSource="{Binding Routes}"
+                                      SelectedItem="{Binding SelectedRoute}">
+
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Id"
+                                                        Width="80"
+                                                        Binding="{Binding Id}" />
+
+                                    <DataGridTextColumn Header="Route"
+                                                        Width="*"
+                                                        MinWidth="150"
+                                                        Binding="{Binding Name}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                            <!-- Segments -->
+                            <DataGrid Grid.Column="1"
+                                      Margin="15, 0, 15, 15"
+                                      AutoGenerateColumns="False"
+                                      IsReadOnly="True"
+                                      FontSize="13"
+                                      CanUserResizeColumns="False"
+                                      CanUserResizeRows="False"
+                                      ItemsSource="{Binding RouteSegments}"
+                                      SelectedItem="{Binding SelectedRouteSegment}"
+                                      x:Name="DataGridView_Transports">
+
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Order"
+                                                        Width="Auto"
+                                                        MinWidth="60"
+                                                        Binding="{Binding Order}" />
+
+                                    <DataGridTextColumn Header="From"
+                                                        Width="Auto"
+                                                        MinWidth="140"
+                                                        Binding="{Binding From}" />
+
+                                    <DataGridTextColumn Header="To"
+                                                        Width="Auto"
+                                                        MinWidth="140"
+                                                        Binding="{Binding To}" />
+
+                                    <DataGridTextColumn Header="Route"
+                                                        Width="*"
+                                                        Binding="{Binding RouteId}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+
+                        <!-- Control Panel -->
+                        <StackPanel Grid.Column="1"
+                                    Grid.Row="1"
+                                    Margin="0, 0, 15, 0"
+                                    Orientation="Vertical">
+
+                            <TextBlock Text="Route Name"
+                                       FontSize="16"
+                                       Foreground="White"
+                                       FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
+                            <TextBox Height="25"
+                                     Text="{Binding Route.Name, UpdateSourceTrigger=PropertyChanged}"
+                                     Padding="5, 0"
+                                     VerticalContentAlignment="Center"
+                                     x:Name="TextBox_Name_Rst" />
+
+                            <Label Height="1"
+                                   Margin="10, 15"
+                                   Background="White" />
+
+                            <TextBlock Text="From"
+                                       Margin="0, 20, 0, 0"
+                                       FontSize="16"
+                                       Foreground="White"
+                                       FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
+                            <TextBox Height="25"
+                                     Text="{Binding RouteSegment.From, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="20"
+                                     Padding="5, 0"
+                                     VerticalContentAlignment="Center"
+                                     x:Name="TextBox_From_Rst" />
+
+                            <TextBlock Text="To"
+                                       Margin="0, 20, 0, 0"
+                                       FontSize="16"
+                                       Foreground="White"
+                                       FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
+                            <TextBox Height="25"
+                                     Text="{Binding RouteSegment.To, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="20"
+                                     Padding="5, 0"
+                                     VerticalContentAlignment="Center"
+                                     x:Name="TextBox_Rst" />
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Buttons Section -->
+                    <StackPanel Grid.Column="1"
+                                Orientation="Vertical"
+                                Background="#bba9c9"
+                                x:Name="StackPanel_Route_Rst">
+
+                        <Button Content="Add"
+                                Height="35"
+                                FontSize="17"
+                                Foreground="White"
+                                Margin="0, 55, 0, 0"
+                                Style="{StaticResource DefaultButtonTheme}"
+                                coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Plus-Icon-32px.png"
+                                Command="{Binding AddCommand}"
+                                CommandParameter="{Binding Routes}"
+                                x:Name="Button_Add_Rst" />
+
+                        <Button Content="Update"
+                                Height="35px"
                                 FontSize="17px"
                                 Foreground="White"
-                                Background="#bba9c9"
+                                Margin="0, 20, 0, 0"
                                 Style="{StaticResource DefaultButtonTheme}"
-                                coreProp:ImageIconProperties.IconSource="/Images/Icons/RoutesWindow/Chain-Icon-32px.png"
-                                />
-                    </Grid>
+                                coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Update-Icon-32px.png"
+                                Command="{Binding UpdateCommand}"
+                                CommandParameter="{Binding SelectedRoute}"
+                                x:Name="Button_Update_Rst" />
+
+                        <Button Content="Delete"
+                                Height="35"
+                                FontSize="17"
+                                Foreground="White"
+                                Margin="0, 20, 0, 0"
+                                Style="{StaticResource DefaultButtonTheme}"
+                                coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Delete-Icon-32px.png"
+                                Command="{Binding RemoveCommand}"
+                                CommandParameter="{Binding SelectedRoute}"
+                                x:Name="Button_Delete_Rst" />
+
+
+                        <Button Content="Clear"
+                                Height="35"
+                                FontSize="17"
+                                Foreground="White"
+                                Margin="0, 145, 0, 0"
+                                Style="{StaticResource DefaultButtonTheme}"
+                                coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Trash-Icon-32px.png"
+                                Command="{Binding ClearCommand}"
+                                x:Name="Button_Clear_Rst" />
+                    </StackPanel>
                 </Grid>
             </TabItem>
 

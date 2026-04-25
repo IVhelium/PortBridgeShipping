@@ -1,13 +1,13 @@
-﻿using PortBridgeShipping.Core;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Windows.Data;
+using System.Windows.Input;
+using PortBridgeShipping.Core;
 using PortBridgeShipping.Core.Collections.Enums;
 using PortBridgeShipping.Core.Collections.Enums.Filters;
 using PortBridgeShipping.MVVM.Models;
-using PortBridgeShipping.MVVM.Views;
 using PortBridgeShipping.Services;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows.Data;
-using System.Windows.Input;
 
 namespace PortBridgeShipping.MVVM.ViewModels
 {
@@ -111,6 +111,19 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
             foreach (var s in segments)
                 RouteSegments.Add(s);
+
+            UpdateFromField();
+        }
+
+        private void UpdateFromField()
+        {
+            var lastSegment = RouteSegments
+                              .OrderBy(rs => rs.Order)
+                              .LastOrDefault();
+
+            if (lastSegment != null) RouteSegment.From = lastSegment.To;
+
+            OnPropertyChanged(nameof(RouteSegment));
         }
 
         #endregion
@@ -155,7 +168,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
             set
             {
                 _selectedRoute = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(SelectedRoute));   
 
                 if (_selectedRoute != null)
                 {
@@ -206,8 +219,6 @@ namespace PortBridgeShipping.MVVM.ViewModels
                         To = _selectedRouteSegmnet.To,
                         RouteId = _selectedRouteSegmnet.RouteId
                     };
-
-                    SelectedRoute = Routes.FirstOrDefault(r => r.Id == _selectedRouteSegmnet.RouteId);
                 }
 
                 CommandManager.InvalidateRequerySuggested();
@@ -297,7 +308,6 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
                 RouteViewMode.RouteSegments => (RouteSegments.Count > 0 || !string.IsNullOrWhiteSpace(RouteSegment.From))
                                                && !string.IsNullOrWhiteSpace(RouteSegment.To)
-                                               && RouteSegment.RouteId > 0
                                                && SelectedRoute != null
                                                && SelectedRouteSegment == null,
 
@@ -314,6 +324,8 @@ namespace PortBridgeShipping.MVVM.ViewModels
                 var createdRoute = _routeService.CreateRoute(route);
 
                 if (createdRoute != null) Routes.Add(createdRoute);
+
+                ClearForm(null);
             }
             else
             {
@@ -330,10 +342,17 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
                 var createdRouteSegment = _routeSegmentService.CreateRouteSegment(routeSegment);
 
-                if (createdRouteSegment != null) RouteSegments.Add(createdRouteSegment);
+                if (createdRouteSegment != null)
+                {
+                    RouteSegments.Add(createdRouteSegment);
+                    ClearFormSegments();
+                    UpdateFromField();
+                }
+
             }
 
-            ClearForm(null);
+            RoutesView.Refresh();
+            RouteSegmentsView.Refresh();
         }
 
         private bool CanUpdate(object? parameter)
@@ -366,6 +385,8 @@ namespace PortBridgeShipping.MVVM.ViewModels
                     if (index >= 0) Routes[index] = updatedRoute;
                     SelectedRoute = updatedRoute;
                 }
+
+                ClearForm(null);
             }
             else
             {
@@ -386,12 +407,11 @@ namespace PortBridgeShipping.MVVM.ViewModels
                 }
 
                 LoadSegmentsByRoute(SelectedRoute.Id);
+                ClearFormSegments();
             }
 
             RoutesView.Refresh();
             RouteSegmentsView.Refresh();
-
-            ClearForm(null);
         }
 
         private bool CanRemove(object? parameter)
@@ -415,6 +435,9 @@ namespace PortBridgeShipping.MVVM.ViewModels
                 {
                     _routeService.DeleteRoute(SelectedRoute.Id);
                     Routes.Remove(SelectedRoute);
+                    RouteSegments.Clear();
+
+                    ClearForm(null);
                 }
             }
             else
@@ -425,10 +448,12 @@ namespace PortBridgeShipping.MVVM.ViewModels
                     RouteSegments.Remove(SelectedRouteSegment);
 
                     LoadSegmentsByRoute(SelectedRoute.Id);
+                    ClearFormSegments();
                 }
             }
 
-            ClearForm(null);
+            RoutesView.Refresh();
+            RouteSegmentsView.Refresh();
         }
 
         private void ClearForm(object? parameter)
@@ -436,6 +461,12 @@ namespace PortBridgeShipping.MVVM.ViewModels
             Route = new Route();
             RouteSegment = new RouteSegment();
             SelectedRoute = null;
+            SelectedRouteSegment = null;
+        }
+
+        private void ClearFormSegments()
+        {
+            RouteSegment = new RouteSegment();
             SelectedRouteSegment = null;
         }
 
@@ -469,11 +500,11 @@ namespace PortBridgeShipping.MVVM.ViewModels
             {
                 RouteFilter.From => routeSegment.From.Contains(SearchBoxText, StringComparison.OrdinalIgnoreCase),
                 RouteFilter.To => routeSegment.To.Contains(SearchBoxText, StringComparison.OrdinalIgnoreCase),
-                RouteFilter.Route => routeSegment.Route.Display.Contains(SearchBoxText, StringComparison.OrdinalIgnoreCase),
+                RouteFilter.Route => routeSegment.RouteId.ToString().Contains(SearchBoxText),
                 _ => true
             };
         }
-
+        
         #endregion
     }
 }
