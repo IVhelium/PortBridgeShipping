@@ -403,7 +403,6 @@
 
                                     <DataGridTextColumn Header="To"
                                                         Width="*"
-                                                        MinWidth="140"
                                                         Binding="{Binding To}" />
                                 </DataGrid.Columns>
                             </DataGrid>
@@ -420,18 +419,18 @@
                                       CanUserResizeColumns="False"
                                       CanUserResizeRows="False"
                                       ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                      ItemsSource="{Binding Routes}"
-                                      SelectedItem="{Binding SelectedRoute}">
+                                      ItemsSource="{Binding RouteSegmentTransports}"
+                                      SelectedItem="{Binding SelectedRouteSegmentTransport}">
 
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="RouteSegment"
                                                         Width="140"
-                                                        Binding="{Binding Id}" />
+                                                        Binding="{Binding RouteSegment}" />
 
                                     <DataGridTextColumn Header="Transport"
                                                         Width="*"
                                                         MinWidth="150"
-                                                        Binding="{Binding Name}" />
+                                                        Binding="{Binding Transport}" />
                                 </DataGrid.Columns>
                             </DataGrid>
 
@@ -444,25 +443,29 @@
                                       FontSize="13"
                                       CanUserResizeColumns="False"
                                       CanUserResizeRows="False"
-                                      ItemsSource="{Binding RouteSegments}"
-                                      SelectedItem="{Binding SelectedRouteSegment}"
+                                      ItemsSource="{Binding Transports}"
+                                      SelectedItem="{Binding SelectedTrnasport}"
                                       x:Name="DataGridView_Transports_Rst">
 
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Number"
                                                         Width="Auto"
-                                                        MinWidth="170"/>
+                                                        MinWidth="170"
+                                                        Binding="{Binding TransportNumber}"/>
 
                                     <DataGridTextColumn Header="Name"
                                                         Width="Auto"
-                                                        MinWidth="160"/>
+                                                        MinWidth="160"
+                                                        Binding="{Binding Name}"/>
 
                                     <DataGridTextColumn Header="Type"
                                                         Width="Auto"
-                                                        MinWidth="150"/>
+                                                        MinWidth="150"
+                                                        Binding="{Binding TransportType}"/>
 
                                     <DataGridTextColumn Header="Capacity"
-                                                        Width="*"/>
+                                                        Width="*"
+                                                        Binding="{Binding Capacity}"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Grid>
@@ -483,7 +486,9 @@
                                       Background="White"
                                       VerticalContentAlignment="Center"
                                       ItemsSource="{Binding RouteSegments}"
-                                      SelectedItem="{Binding SelectedRouteSegmentTransport.RouteSegmentId}"/>
+                                      SelectedItem="{Binding SelectedRouteSegmentTransport.RouteSegmentId}"
+                                      SelectedValuePath="Id"
+                                      DisplayMemberPath="From" />
 
                             <TextBlock Text="Transport Id"
                                        Margin="0, 20, 0, 0"
@@ -497,7 +502,8 @@
                                       VerticalContentAlignment="Center"
                                       ItemsSource="{Binding Transports}"
                                       SelectedItem="{Binding SelectedRouteSegmentTransport.TransportId}"
-                                      x:Name="ComboBox_Type" />
+                                      SelectedValuePath="Id"
+                                      DisplayMemberPath="TransportNumber" />
                         </StackPanel>
                     </Grid>
 

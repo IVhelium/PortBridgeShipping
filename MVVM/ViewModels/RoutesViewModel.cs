@@ -531,8 +531,9 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
         private bool RouteSegmentTransportCanBind(object? parameter)
         {
-            return (RouteSegmentTransport.RouteSegmentId > 0 || SelectedRouteSegment != null)
-                   && (RouteSegmentTransport.TransportId > 0 || SelectedTrnasport != null);
+            return RouteSegmentTransport.RouteSegmentId > 0
+                   && RouteSegmentTransport.TransportId > 0
+                   && SelectedRouteSegmentTransport == null;
         }
 
         private void RouteSegmentTransportBind(object? parameter)
