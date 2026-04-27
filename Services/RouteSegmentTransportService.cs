@@ -61,6 +61,26 @@ namespace PortBridgeShipping.Services
             return transportSegment;
         }
 
+        public RouteSegmentTransport? UpdateTransportFromSegment(RouteSegmentTransport routeSegmentTransport ,int segmentId, int transportId)
+        {
+            using var db = new ApplicationDbContext();
+
+            var transportSegmentExist = db.RouteSegmentTransports
+                                       .FirstOrDefault(rst => rst.RouteSegmentId == segmentId
+                                       && rst.TransportId == transportId);
+
+            if (transportSegmentExist != null) return null;
+
+            transportSegmentExist.RouteSegmentId = routeSegmentTransport.RouteSegmentId;
+            transportSegmentExist.TransportId = routeSegmentTransport.TransportId;
+
+            db.SaveChanges();
+
+            return db.RouteSegmentTransports
+                     .FirstOrDefault(rst => rst.RouteSegmentId == segmentId
+                     && rst.TransportId == transportId);
+        }
+
         public bool DeleteTransportFromSegment(int segmentId, int transportId)
         {
             using var db = new ApplicationDbContext();

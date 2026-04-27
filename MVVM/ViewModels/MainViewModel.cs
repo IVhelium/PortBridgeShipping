@@ -40,7 +40,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
                 obj =>
                 {
                     CurrentView = ContainersVM;
-                    Title = "Containers Manegment";
+                    Title = "Containers Managment";
                 },
                 obj => HasRoute()
             );
@@ -48,14 +48,14 @@ namespace PortBridgeShipping.MVVM.ViewModels
             TransportsViewCommand = new RelayCommand(obj =>
             {
                 CurrentView = TransportsVM;
-                Title = "Ships Manegment";
+                Title = "Ships Managment";
             });
 
             RoutesViewCommand = new RelayCommand(
                 obj =>
                 {
                     CurrentView = RoutesVM;
-                    Title = "Routes Manegment";
+                    Title = "Routes Managment";
                 },
                 obj => HasTransport()
             );

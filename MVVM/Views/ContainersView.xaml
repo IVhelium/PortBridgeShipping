@@ -170,7 +170,7 @@
                               ItemsSource="{Binding Routes}"
                               SelectedValue="{Binding Container.RouteId, Mode=TwoWay}"
                               SelectedValuePath="Id"
-                              DisplayMemberPath="Display"
+                              DisplayMemberPath="Name"
                               x:Name="ComboBox_Route" />
                 </StackPanel>
             </Grid>

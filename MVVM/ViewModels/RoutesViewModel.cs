@@ -26,12 +26,20 @@ namespace PortBridgeShipping.MVVM.ViewModels
         {
             #region Commands Invocation
 
-            AddCommand = new RelayCommand(Add, CanAdd);
-            UpdateCommand = new RelayCommand(Update, CanUpdate);
-            RemoveCommand = new RelayCommand(Remove, CanRemove);
-            ClearCommand = new RelayCommand(ClearForm);
+            // Route RouteSegment
+            RouteRouteSegment_AddCommand = new RelayCommand(RouteRouteSegmentAdd, RouteRouteSegmentCanAdd);
+            RouteRouteSegment_UpdateCommand = new RelayCommand(RouteRouteSegmentUpdate, RouteRouteSegmentCanUpdate);
+            RouteRouteSegment_RemoveCommand = new RelayCommand(RouteRouteSegmentRemove, RouteRouteSegmentCanRemove);
+            RouteRouteSegment_ClearCommand = new RelayCommand(RouteRouteSegmentClearForm);
+
+            // RouteSegment Transport
+            RouteSegmentTransport_BindCommand = new RelayCommand(RouteSegmentTransportBind, RouteSegmentTransportCanBind);
+            RouteSegmentTransport_UpdateCommand = new RelayCommand(RouteSegmentTransportUpdate, RouteSegmentTransportCanUpdate);
+            RouteSegmentTransport_DeleteCommand = new RelayCommand(RouteSegmentTransportRemove, RouteSegmentTransportCanRemove);
+            RouteSegmentTransport_ClearForm = new RelayCommand(RouteSegmentTransportClearForm);
 
             #endregion
+
 
             Routes = new ObservableCollection<Route>();
             RouteSegments = new ObservableCollection<RouteSegment>();
@@ -40,8 +48,12 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
             RoutesView = CollectionViewSource.GetDefaultView(Routes);
             RouteSegmentsView = CollectionViewSource.GetDefaultView(RouteSegments);
+            TransportsView = CollectionViewSource.GetDefaultView(Transports);
+            RouteSegmentTransportsView = CollectionViewSource.GetDefaultView(RouteSegmentTransports);
             RoutesView.Filter = FilterRoutes;
             RouteSegmentsView.Filter = FilterRouteSegments;
+            TransportsView.Filter = FilterTransports;
+            RouteSegmentTransportsView.Filter = FilterRouteSegmentTransports;
 
             Filters = Enum.GetValues<RouteFilter>();
             ViewModes = Enum.GetValues<RouteViewMode>();
@@ -52,10 +64,18 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
         #region Commands
 
-        public RelayCommand AddCommand { get; set; }
-        public RelayCommand UpdateCommand { get; set; }
-        public RelayCommand RemoveCommand { get; set; }
-        public RelayCommand ClearCommand { get; set; }
+        // Route RouteSegment Commands
+        public RelayCommand RouteRouteSegment_AddCommand { get; set; }
+        public RelayCommand RouteRouteSegment_UpdateCommand { get; set; }
+        public RelayCommand RouteRouteSegment_RemoveCommand { get; set; }
+        public RelayCommand RouteRouteSegment_ClearCommand { get; set; }
+
+
+        // RouteSegment Transport Commands
+        public RelayCommand RouteSegmentTransport_BindCommand { get; set; }
+        public RelayCommand RouteSegmentTransport_UpdateCommand { get; set; }
+        public RelayCommand RouteSegmentTransport_DeleteCommand { get; set; }
+        public RelayCommand RouteSegmentTransport_ClearForm { get; set; }
 
         #endregion
 
@@ -64,6 +84,8 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
         private readonly ICollectionView RoutesView;
         private readonly ICollectionView RouteSegmentsView;
+        private readonly ICollectionView TransportsView;
+        private readonly ICollectionView RouteSegmentTransportsView;
 
         public IEnumerable<RouteFilter> Filters { get; set; }
         public IEnumerable<RouteViewMode> ViewModes { get; set; }
@@ -263,6 +285,41 @@ namespace PortBridgeShipping.MVVM.ViewModels
             }
         }
 
+        // RouteSegmentTransport Model Value
+        private RouteSegmentTransport _routeSegmentTransport = new();
+        public RouteSegmentTransport RouteSegmentTransport
+        {
+            get { return _routeSegmentTransport; }
+            set
+            {
+                _routeSegmentTransport = value;
+                OnPropertyChanged();
+
+                CommandManager.InvalidateRequerySuggested();
+            }
+        }
+
+        // Selected RouteSegmentTransport Value
+        private RouteSegmentTransport? _selectedRouteSegmentTransport;
+        public RouteSegmentTransport? SelectedRouteSegmentTransport
+        {
+            get { return _selectedRouteSegmentTransport; }
+            set
+            {
+                _selectedRouteSegmentTransport = value;
+                OnPropertyChanged();
+
+                if (_selectedRouteSegmentTransport != null)
+                {
+                    RouteSegmentTransport = new RouteSegmentTransport
+                    {
+                        RouteSegmentId = _selectedRouteSegmentTransport.RouteSegmentId,
+                        TransportId = _selectedRouteSegmentTransport.TransportId
+                    };
+                }
+            }
+        }
+
         // SearchBox Value
         private string? _searchBoxText;
         public string? SearchBoxText
@@ -275,6 +332,8 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
                 RoutesView.Refresh();   // Обновление Вьев при каждом изменении данного свойства
                 RouteSegmentsView.Refresh();
+                TransportsView.Refresh();
+                RouteSegmentTransportsView.Refresh();
             }
         }
 
@@ -290,6 +349,8 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
                 RoutesView.Refresh();
                 RouteSegmentsView.Refresh();   // Обновление Вьев при каждом изменении данного свойства
+                TransportsView.Refresh();
+                RouteSegmentTransportsView.Refresh();
             }
         }
 
@@ -298,7 +359,9 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
         #region Command Properties
 
-        private bool CanAdd(object? parameter)
+        #region Route RouteSegment
+
+        private bool RouteRouteSegmentCanAdd(object? parameter)
         {
             return SelectedViewMode switch
             {
@@ -315,7 +378,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
             };
         }
 
-        private void Add(object? parameter)
+        private void RouteRouteSegmentAdd(object? parameter)
         {
             if (SelectedViewMode == RouteViewMode.Routes)
             {
@@ -325,7 +388,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
                 if (createdRoute != null) Routes.Add(createdRoute);
 
-                ClearForm(null);
+                RouteRouteSegmentClearForm(null);
             }
             else
             {
@@ -355,7 +418,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
             RouteSegmentsView.Refresh();
         }
 
-        private bool CanUpdate(object? parameter)
+        private bool RouteRouteSegmentCanUpdate(object? parameter)
         {
             return SelectedViewMode switch
             {
@@ -368,7 +431,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
             };
         }
 
-        private void Update(object? parameter)
+        private void RouteRouteSegmentUpdate(object? parameter)
         {
             if (SelectedViewMode == RouteViewMode.Routes)
             {
@@ -386,7 +449,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
                     SelectedRoute = updatedRoute;
                 }
 
-                ClearForm(null);
+                RouteRouteSegmentClearForm(null);
             }
             else
             {
@@ -414,7 +477,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
             RouteSegmentsView.Refresh();
         }
 
-        private bool CanRemove(object? parameter)
+        private bool RouteRouteSegmentCanRemove(object? parameter)
         {
             return SelectedViewMode switch
             {
@@ -427,7 +490,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
             };
         }
 
-        private void Remove(object? parameter)
+        private void RouteRouteSegmentRemove(object? parameter)
         {
             if (SelectedViewMode == RouteViewMode.Routes)
             {
@@ -437,7 +500,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
                     Routes.Remove(SelectedRoute);
                     RouteSegments.Clear();
 
-                    ClearForm(null);
+                    RouteRouteSegmentClearForm(null);
                 }
             }
             else
@@ -456,7 +519,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
             RouteSegmentsView.Refresh();
         }
 
-        private void ClearForm(object? parameter)
+        private void RouteRouteSegmentClearForm(object? parameter)
         {
             Route = new Route();
             RouteSegment = new RouteSegment();
@@ -469,6 +532,48 @@ namespace PortBridgeShipping.MVVM.ViewModels
             RouteSegment = new RouteSegment();
             SelectedRouteSegment = null;
         }
+
+        #endregion
+
+
+        #region RouteSegment Transport
+
+        private bool RouteSegmentTransportCanBind(object? parameter)
+        {
+            return true;
+        }
+
+        private void RouteSegmentTransportBind(object? parameter)
+        {
+
+        } 
+
+        private bool RouteSegmentTransportCanUpdate(object? parameter)
+        {
+            return true;
+        }
+
+        private void RouteSegmentTransportUpdate(object? parameter)
+        {
+
+        }
+
+        private bool RouteSegmentTransportCanRemove(object? parameter)
+        {
+            return true;
+        }
+
+        private void RouteSegmentTransportRemove(object? parameter)
+        {
+
+        }
+
+        private void RouteSegmentTransportClearForm(object? parameter)
+        {
+
+        }
+
+        #endregion 
 
         #endregion
 
@@ -501,6 +606,37 @@ namespace PortBridgeShipping.MVVM.ViewModels
                 RouteFilter.From => routeSegment.From.Contains(SearchBoxText, StringComparison.OrdinalIgnoreCase),
                 RouteFilter.To => routeSegment.To.Contains(SearchBoxText, StringComparison.OrdinalIgnoreCase),
                 RouteFilter.Route => routeSegment.RouteId.ToString().Contains(SearchBoxText),
+                _ => true
+            };
+        }
+
+        private bool FilterTransports(object? obj)
+        {
+            if (string.IsNullOrWhiteSpace(SearchBoxText)) return true;
+
+            var transport = obj as Transport;
+            if (transport == null) return false;
+
+            return SelectedFilter switch
+            {
+                RouteFilter.Number => transport.TransportNumber.ToString().Contains(SearchBoxText),
+                RouteFilter.TransportName => transport.Name.Contains(SearchBoxText, StringComparison.OrdinalIgnoreCase),
+                RouteFilter.Type => transport.TransportType.CompareTo(transport.TransportType).ToString().Contains(SearchBoxText),
+                _ => true
+            };
+        }
+
+        private bool FilterRouteSegmentTransports(object? obj)
+        {
+            if (string.IsNullOrWhiteSpace(SearchBoxText)) return true;
+
+            var segmentTransport = obj as RouteSegmentTransport;
+            if (segmentTransport == null) return false;
+
+            return SelectedFilter switch 
+            {
+                RouteFilter.Segment => segmentTransport.RouteSegmentId.ToString().Contains(SearchBoxText),
+                RouteFilter.Transport => segmentTransport.TransportId.ToString().Contains(SearchBoxText),
                 _ => true
             };
         }

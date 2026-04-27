@@ -33,6 +33,8 @@ namespace PortBridgeShipping.MVVM.ViewModels
             #endregion
 
             Containers = new ObservableCollection<Container>();
+            Routes = new ObservableCollection<Route>();
+
             Container = new Container();
 
             ContainersView = CollectionViewSource.GetDefaultView(Containers);   // Создаем представление над основной коллекцией

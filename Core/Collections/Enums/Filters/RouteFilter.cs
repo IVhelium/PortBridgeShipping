@@ -5,6 +5,11 @@
         RouteName,
         From,
         To,
-        Route
+        Route,
+        Segment,
+        Transport,
+        Number,
+        TransportName,
+        Type
     }
 }

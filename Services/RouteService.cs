@@ -51,6 +51,8 @@ namespace PortBridgeShipping.Services
 
             routeExist.Name = route.Name;
 
+            db.SaveChanges();
+
             return db.Routes
                 .Include(r => r.Segments)
                 .FirstOrDefault(r => r.Id == id);
