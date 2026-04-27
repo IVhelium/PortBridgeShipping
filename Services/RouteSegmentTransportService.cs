@@ -39,20 +39,20 @@ namespace PortBridgeShipping.Services
                 .ToList();
         }
 
-        public RouteSegmentTransport? AddTransportToSegment(int segmentId, int transportId)
+        public RouteSegmentTransport? AddTransportToSegment(RouteSegmentTransport routeSegmentTransport)
         {
             using var db = new ApplicationDbContext();
 
             var transportSegmentExist = db.RouteSegmentTransports
-                                       .FirstOrDefault(rst => rst.RouteSegmentId == segmentId
-                                       && rst.TransportId == transportId);
+                                       .FirstOrDefault(rst => rst.RouteSegmentId == routeSegmentTransport.RouteSegmentId
+                                       && rst.TransportId == routeSegmentTransport.TransportId);
 
             if (transportSegmentExist != null) return null;
 
             var transportSegment = new RouteSegmentTransport
             {
-                RouteSegmentId = segmentId,
-                TransportId = transportId
+                RouteSegmentId = routeSegmentTransport.RouteSegmentId,
+                TransportId = routeSegmentTransport.TransportId
             };
 
             db.RouteSegmentTransports.Add(transportSegment);

@@ -300,6 +300,13 @@
                     </Grid.ColumnDefinitions>
 
                     <Grid Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto"
+                                              MinWidth="200"
+                                              MaxWidth="260" />
+                        </Grid.ColumnDefinitions>
+                        
                         <Grid.RowDefinitions>
                             <RowDefinition Height="65" />
                             <RowDefinition Height="*" />
@@ -337,6 +344,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="350" />
                                 <ColumnDefinition Width="*" />
+                                
                             </Grid.ColumnDefinitions>
 
                             <Grid.RowDefinitions>
@@ -458,6 +466,39 @@
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Grid>
+
+                        <!-- Control Panel -->
+                        <StackPanel Grid.Column="1"
+                                    Grid.Row="1"
+                                    Margin="0, 0, 15, 0"
+                                    Orientation="Vertical">
+
+                            <TextBlock Text="Route Segment Id"
+                                       FontSize="16"
+                                       Foreground="White"
+                                       FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
+                            <ComboBox Height="25"
+                                      Text="Type"
+                                      Padding="5, 0"
+                                      Background="White"
+                                      VerticalContentAlignment="Center"
+                                      ItemsSource="{Binding RouteSegments}"
+                                      SelectedItem="{Binding SelectedRouteSegmentTransport.RouteSegmentId}"/>
+
+                            <TextBlock Text="Transport Id"
+                                       Margin="0, 20, 0, 0"
+                                       FontSize="16"
+                                       Foreground="White"
+                                       FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
+                            <ComboBox Height="25"
+                                      Text="Type"
+                                      Padding="5, 0"
+                                      Background="White"
+                                      VerticalContentAlignment="Center"
+                                      ItemsSource="{Binding Transports}"
+                                      SelectedItem="{Binding SelectedRouteSegmentTransport.TransportId}"
+                                      x:Name="ComboBox_Type" />
+                        </StackPanel>
                     </Grid>
 
                     <!-- Buttons Section -->
@@ -473,7 +514,7 @@
                                 Margin="0, 55, 0, 0"
                                 Style="{StaticResource DefaultButtonTheme}"
                                 coreProp:ImageIconProperties.IconSource="/Images/Icons/RoutesWindow/Chain-Icon-32px.png"
-                                Command="{Binding RouteRouteSegment_AddCommand}"
+                                Command="{Binding RouteSegmentTransport_BindCommand}"
                                 CommandParameter="{Binding Routes}"
                                 x:Name="Button_Add_Rst" />
 
@@ -484,7 +525,7 @@
                                 Margin="0, 20, 0, 0"
                                 Style="{StaticResource DefaultButtonTheme}"
                                 coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Update-Icon-32px.png"
-                                Command="{Binding RouteRouteSegment_UpdateCommand}"
+                                Command="{Binding RouteSegmentTransport_UpdateCommand}"
                                 CommandParameter="{Binding SelectedRoute}"
                                 x:Name="Button_Update_Rst" />
 
@@ -495,7 +536,7 @@
                                 Margin="0, 20, 0, 0"
                                 Style="{StaticResource DefaultButtonTheme}"
                                 coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Delete-Icon-32px.png"
-                                Command="{Binding RouteRouteSegment_RemoveCommand}"
+                                Command="{Binding RouteSegmentTransport_RemoveCommand}"
                                 CommandParameter="{Binding SelectedRoute}"
                                 x:Name="Button_Delete_Rst" />
 
@@ -507,7 +548,7 @@
                                 Margin="0, 145, 0, 0"
                                 Style="{StaticResource DefaultButtonTheme}"
                                 coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Trash-Icon-32px.png"
-                                Command="{Binding RouteRouteSegment_ClearCommand}"
+                                Command="{Binding RouteSegmentTransport_ClearForm}"
                                 x:Name="Button_Clear_Rst" />
                     </StackPanel>
                 </Grid>
