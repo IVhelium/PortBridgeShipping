@@ -1,12 +1,12 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows.Data;
-using System.Windows.Input;
-using PortBridgeShipping.Core;
+﻿using PortBridgeShipping.Core;
 using PortBridgeShipping.Core.Collections.Enums;
 using PortBridgeShipping.Core.Collections.Enums.Filters;
 using PortBridgeShipping.MVVM.Models;
 using PortBridgeShipping.Services;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows.Data;
+using System.Windows.Input;
 using Container = PortBridgeShipping.MVVM.Models.Container;
 
 namespace PortBridgeShipping.MVVM.ViewModels

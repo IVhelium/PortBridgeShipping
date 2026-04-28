@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Catel.Data;
+﻿using Catel.Data;
 
 namespace PortBridgeShipping.MVVM.Models
 {

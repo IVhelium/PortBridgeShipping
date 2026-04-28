@@ -1,5 +1,6 @@
-﻿using System.Collections.ObjectModel;
-using Catel.Data;
+﻿using Catel.Data;
+using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PortBridgeShipping.MVVM.Models
 {

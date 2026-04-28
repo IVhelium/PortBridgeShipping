@@ -1,12 +1,11 @@
-﻿using Catel.Collections;
-using PortBridgeShipping.Core;
+﻿using PortBridgeShipping.Core;
 using PortBridgeShipping.Core.Collections.Enums;
 using PortBridgeShipping.Core.Collections.Enums.Filters;
 using PortBridgeShipping.MVVM.Models;
 using PortBridgeShipping.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
+using System.Security.Cryptography;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -126,7 +125,15 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
             RouteSegmentTransports.Clear();
             foreach (var rst in _routeSegmentTransportService.GetAllRouteSegmentTransports())
+            {
+                var routeSegment = RouteSegments.FirstOrDefault(rs => rs.Id == rst.RouteSegmentId);
+                if (routeSegment != null) rst.RouteSegment = routeSegment;
+
+                var transport = Transports.FirstOrDefault(t => t.Id == rst.TransportId);
+                if (transport != null) rst.Transport = transport;
+
                 RouteSegmentTransports.Add(rst);
+            }          
         }
 
         private void LoadSegmentsByRoute(int routeId)
@@ -196,7 +203,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
             set
             {
                 _selectedRoute = value;
-                OnPropertyChanged(nameof(SelectedRoute));   
+                OnPropertyChanged(nameof(SelectedRoute));
 
                 if (_selectedRoute != null)
                 {
@@ -540,14 +547,23 @@ namespace PortBridgeShipping.MVVM.ViewModels
         {
             RouteSegmentTransport routeSegmentTransport = new()
             {
-                RouteSegmentId = RouteSegment.Id,
-                TransportId = Transport.Id
+                RouteSegmentId = RouteSegmentTransport.RouteSegmentId,
+                TransportId = RouteSegmentTransport.TransportId
             };
 
             var createdSegmentTransport = _routeSegmentTransportService.AddTransportToSegment(routeSegmentTransport);
 
-            if (createdSegmentTransport != null) RouteSegmentTransports.Add(createdSegmentTransport);
-        } 
+            if (createdSegmentTransport != null)
+            {
+                var routeSegment = RouteSegments.FirstOrDefault(rs => rs.Id == createdSegmentTransport.RouteSegmentId);
+                if (routeSegment != null) createdSegmentTransport.RouteSegment = routeSegment;
+
+                var transport = Transports.FirstOrDefault(t => t.Id == createdSegmentTransport.TransportId);
+                if (transport != null) createdSegmentTransport.Transport = transport;
+
+                RouteSegmentTransports.Add(createdSegmentTransport);
+            }
+        }
 
         private bool RouteSegmentTransportCanUpdate(object? parameter)
         {
@@ -560,8 +576,8 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
             RouteSegmentTransport routeSegmentTransport = new()
             {
-                RouteSegmentId = RouteSegment.Id,
-                TransportId = Transport.Id
+                RouteSegmentId = RouteSegmentTransport.RouteSegmentId,
+                TransportId = RouteSegmentTransport.TransportId
             };
 
             var updatedRouteSegmentTransport = _routeSegmentTransportService.UpdateTransportFromSegment(routeSegmentTransport, SelectedRouteSegmentTransport.RouteSegmentId, SelectedRouteSegmentTransport.TransportId);
@@ -569,6 +585,12 @@ namespace PortBridgeShipping.MVVM.ViewModels
             // UI
             if (updatedRouteSegmentTransport != null)
             {
+                var routeSegment = RouteSegments.FirstOrDefault(rs => rs.Id == updatedRouteSegmentTransport.RouteSegmentId);
+                if (routeSegment != null) updatedRouteSegmentTransport.RouteSegment = routeSegment;
+
+                var transport = Transports.FirstOrDefault(t => t.Id == updatedRouteSegmentTransport.TransportId);
+                if (transport != null) updatedRouteSegmentTransport.Transport = transport;
+
                 int index = RouteSegmentTransports.IndexOf(SelectedRouteSegmentTransport);
                 if (index >= 0) RouteSegmentTransports[index] = updatedRouteSegmentTransport;
                 SelectedRouteSegmentTransport = updatedRouteSegmentTransport;
@@ -628,6 +650,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
         #endregion
 
+
         #region Search Filters
 
         private bool FilterRoutes(object? obj)
@@ -683,14 +706,14 @@ namespace PortBridgeShipping.MVVM.ViewModels
             var segmentTransport = obj as RouteSegmentTransport;
             if (segmentTransport == null) return false;
 
-            return SelectedFilter switch 
+            return SelectedFilter switch
             {
                 RouteFilter.Segment => segmentTransport.RouteSegmentId.ToString().Contains(SearchBoxText),
                 RouteFilter.Transport => segmentTransport.TransportId.ToString().Contains(SearchBoxText),
                 _ => true
             };
         }
-        
+
         #endregion
     }
 }

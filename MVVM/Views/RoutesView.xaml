@@ -234,7 +234,7 @@
                                 Margin="0, 145, 0, 0"
                                 Style="{StaticResource DefaultButtonTheme}"
                                 coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Trash-Icon-32px.png"
-                                Command="{Binding ClearCommand}"
+                                Command="{Binding RouteRouteSegment_ClearCommand}"
                                 x:Name="Button_Clear" />
                     </StackPanel>
 
@@ -410,9 +410,8 @@
                             <!-- RouteSegment Transports -->
                             <DataGrid Grid.Column="0"
                                       Grid.Row="1"
+                                      Grid.ColumnSpan="2"
                                       Margin="0, 0, 0, 15"
-                                      Width="Auto"
-                                      MaxWidth="400"
                                       AutoGenerateColumns="False"
                                       IsReadOnly="True"
                                       FontSize="13"
@@ -423,49 +422,22 @@
                                       SelectedItem="{Binding SelectedRouteSegmentTransport}">
 
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="RouteSegment"
-                                                        Width="140"
-                                                        Binding="{Binding RouteSegment}" />
+                                    <DataGridTextColumn Header="From"
+                                                        Width="150"
+                                                        Binding="{Binding RouteSegment.From}" />
 
-                                    <DataGridTextColumn Header="Transport"
-                                                        Width="*"
+                                    <DataGridTextColumn Header="To"
+                                                        Width="150"
+                                                        Binding="{Binding RouteSegment.To}" />
+
+                                    <DataGridTextColumn Header="Transport Number"
+                                                        Width="200"
                                                         MinWidth="150"
-                                                        Binding="{Binding Transport}" />
-                                </DataGrid.Columns>
-                            </DataGrid>
+                                                        Binding="{Binding Transport.TransportNumber}" />
 
-                            <!-- Transports -->
-                            <DataGrid Grid.Column="1"
-                                      Grid.Row="1"
-                                      Margin="15, 0, 0, 15"
-                                      AutoGenerateColumns="False"
-                                      IsReadOnly="True"
-                                      FontSize="13"
-                                      CanUserResizeColumns="False"
-                                      CanUserResizeRows="False"
-                                      ItemsSource="{Binding Transports}"
-                                      SelectedItem="{Binding SelectedTrnasport}"
-                                      x:Name="DataGridView_Transports_Rst">
-
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Number"
-                                                        Width="Auto"
-                                                        MinWidth="170"
-                                                        Binding="{Binding TransportNumber}"/>
-
-                                    <DataGridTextColumn Header="Name"
-                                                        Width="Auto"
-                                                        MinWidth="160"
-                                                        Binding="{Binding Name}"/>
-
-                                    <DataGridTextColumn Header="Type"
-                                                        Width="Auto"
-                                                        MinWidth="150"
-                                                        Binding="{Binding TransportType}"/>
-
-                                    <DataGridTextColumn Header="Capacity"
+                                    <DataGridTextColumn Header="Transport Name"
                                                         Width="*"
-                                                        Binding="{Binding Capacity}"/>
+                                                        Binding="{Binding Transport.Name}"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Grid>
@@ -476,32 +448,30 @@
                                     Margin="0, 0, 15, 0"
                                     Orientation="Vertical">
 
-                            <TextBlock Text="Route Segment Id"
+                            <TextBlock Text="Route Segment"
                                        FontSize="16"
                                        Foreground="White"
                                        FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
                             <ComboBox Height="25"
-                                      Text="Type"
                                       Padding="5, 0"
                                       Background="White"
                                       VerticalContentAlignment="Center"
                                       ItemsSource="{Binding RouteSegments}"
-                                      SelectedItem="{Binding SelectedRouteSegmentTransport.RouteSegmentId}"
+                                      SelectedValue="{Binding RouteSegmentTransport.RouteSegmentId, Mode=TwoWay}"
                                       SelectedValuePath="Id"
                                       DisplayMemberPath="From" />
 
-                            <TextBlock Text="Transport Id"
+                            <TextBlock Text="Transport"
                                        Margin="0, 20, 0, 0"
                                        FontSize="16"
                                        Foreground="White"
                                        FontFamily="/PortBridgeShipping;component/Fonts/Cagliostro-Regular.ttf#Cagliostro" />
                             <ComboBox Height="25"
-                                      Text="Type"
                                       Padding="5, 0"
                                       Background="White"
                                       VerticalContentAlignment="Center"
                                       ItemsSource="{Binding Transports}"
-                                      SelectedItem="{Binding SelectedRouteSegmentTransport.TransportId}"
+                                      SelectedValue="{Binding RouteSegmentTransport.TransportId, Mode=TwoWay}"
                                       SelectedValuePath="Id"
                                       DisplayMemberPath="TransportNumber" />
                         </StackPanel>

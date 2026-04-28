@@ -61,7 +61,7 @@ namespace PortBridgeShipping.Services
             return transportSegment;
         }
 
-        public RouteSegmentTransport? UpdateTransportFromSegment(RouteSegmentTransport routeSegmentTransport ,int segmentId, int transportId)
+        public RouteSegmentTransport? UpdateTransportFromSegment(RouteSegmentTransport routeSegmentTransport, int segmentId, int transportId)
         {
             using var db = new ApplicationDbContext();
 
