@@ -532,7 +532,130 @@
 
             <!-- ================= TAB 3 ================= -->
             <TabItem Header="Show All Routes">
-                
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="160" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="65" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Column="0"
+                                    Grid.Row="0"
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Center">
+
+                            <TextBox Grid.Column="0"
+                                     Grid.Row="0"
+                                     Width="200"
+                                     Height="40"
+                                     Text="{Binding SearchBoxText, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource SearchBoxTheme}"
+                                     coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Search-Icon-32px.png"/>
+
+                            <ComboBox Grid.Column="0"
+                                      Grid.Row="0"
+                                      Margin="15, 0"
+                                      Width="140"
+                                      Height="25"
+                                      Background="White"
+                                      ItemsSource="{Binding Filters}"
+                                      SelectedItem="{Binding SelectedFilter}" />
+                        </StackPanel>
+
+                        <!-- Content Control -->
+                        <Grid Grid.Column="0"
+                              Grid.Row="1">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="350" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Routes -->
+                            <DataGrid Grid.Column="0"
+                                      Margin="15, 0, 0, 15"
+                                      Width="Auto"
+                                      MaxWidth="400"
+                                      AutoGenerateColumns="False"
+                                      IsReadOnly="True"
+                                      FontSize="13"
+                                      CanUserResizeColumns="False"
+                                      CanUserResizeRows="False"
+                                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                      ItemsSource="{Binding Routes}"
+                                      SelectedItem="{Binding SelectedRoute}">
+
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Id"
+                                                        Width="80"
+                                                        Binding="{Binding Id}" />
+
+                                    <DataGridTextColumn Header="Route"
+                                                        Width="*"
+                                                        MinWidth="150"
+                                                        Binding="{Binding Name}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                            <!-- Segments -->
+                            <DataGrid Grid.Column="1"
+                                      Margin="15, 0, 15, 15"
+                                      AutoGenerateColumns="False"
+                                      IsReadOnly="True"
+                                      FontSize="13"
+                                      CanUserResizeColumns="False"
+                                      CanUserResizeRows="False"
+                                      ItemsSource="{Binding RouteSegments}"
+                                      SelectedItem="{Binding SelectedRouteSegment}">
+
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Order"
+                                                        Width="Auto"
+                                                        MinWidth="60"
+                                                        Binding="{Binding Order}" />
+
+                                    <DataGridTextColumn Header="From"
+                                                        Width="Auto"
+                                                        MinWidth="140"
+                                                        Binding="{Binding From}" />
+
+                                    <DataGridTextColumn Header="To"
+                                                        Width="Auto"
+                                                        MinWidth="140"
+                                                        Binding="{Binding To}" />
+
+                                    <DataGridTextColumn Header="Route"
+                                                        Width="*"
+                                                        Binding="{Binding RouteId}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </Grid>
+
+                    <!-- Buttons Section -->
+                    <StackPanel Grid.Column="1"
+                                Orientation="Vertical"
+                                Background="#bba9c9">
+
+                        <Button Content="Clear"
+                                Height="35"
+                                FontSize="17"
+                                Foreground="White"
+                                Margin="0, 145, 0, 0"
+                                Style="{StaticResource DefaultButtonTheme}"
+                                coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Trash-Icon-32px.png"
+                                Command="{Binding RouteSegmentTransport_ClearForm}" />
+                    </StackPanel>
+                </Grid>
             </TabItem>
         </TabControl>
     </Border>
