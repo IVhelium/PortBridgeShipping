@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Windows;
+using Microsoft.EntityFrameworkCore;
 using PortBridgeShipping.Data;
 using PortBridgeShipping.MVVM.Models;
-using System.Windows;
 
 namespace PortBridgeShipping
 {

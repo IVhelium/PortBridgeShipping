@@ -226,12 +226,20 @@
                                 CommandParameter="{Binding SelectedRoute}"
                                 x:Name="Button_Delete_Route" />
 
+                        <Button Content="Reload"
+                                Height="35"
+                                FontSize="17"
+                                Foreground="White"
+                                Margin="0, 145, 0, 0"
+                                Style="{StaticResource DefaultButtonTheme}"
+                                coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Trash-Icon-32px.png"
+                                Command="{Binding RouteSegmentTransport_ReloadCommand}" />
 
                         <Button Content="Clear"
                                 Height="35"
                                 FontSize="17"
                                 Foreground="White"
-                                Margin="0, 145, 0, 0"
+                                Margin="0, 20, 0, 0"
                                 Style="{StaticResource DefaultButtonTheme}"
                                 coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Trash-Icon-32px.png"
                                 Command="{Binding RouteRouteSegment_ClearCommand}"
@@ -278,11 +286,20 @@
                                 CommandParameter="{Binding SelectedRouteSegment}"
                                 x:Name="Button_Delete_Segment" />
 
-                        <Button Content="Clear"
+                        <Button Content="Reload"
                                 Height="35"
                                 FontSize="17"
                                 Foreground="White"
                                 Margin="0, 145, 0, 0"
+                                Style="{StaticResource DefaultButtonTheme}"
+                                coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Trash-Icon-32px.png"
+                                Command="{Binding RouteSegmentTransport_ReloadCommand}"/>
+
+                        <Button Content="Clear"
+                                Height="35"
+                                FontSize="17"
+                                Foreground="White"
+                                Margin="0, 20, 0, 0"
                                 Style="{StaticResource DefaultButtonTheme}"
                                 coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Trash-Icon-32px.png"
                                 Command="{Binding RouteRouteSegment_ClearCommand}"
@@ -516,12 +533,21 @@
                                 CommandParameter="{Binding SelectedRoute}"
                                 x:Name="Button_Delete_Rst" />
 
+                        <Button Content="Reload"
+                                Height="35"
+                                FontSize="17"
+                                Foreground="White"
+                                Margin="0, 145, 0, 0"
+                                Style="{StaticResource DefaultButtonTheme}"
+                                coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Trash-Icon-32px.png"
+                                Command="{Binding RouteSegmentTransport_ReloadCommand}"
+                                x:Name="Button_Clear_Reload" />
 
                         <Button Content="Clear"
                                 Height="35"
                                 FontSize="17"
                                 Foreground="White"
-                                Margin="0, 145, 0, 0"
+                                Margin="0, 20, 0, 0"
                                 Style="{StaticResource DefaultButtonTheme}"
                                 coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Trash-Icon-32px.png"
                                 Command="{Binding RouteSegmentTransport_ClearForm}"
@@ -646,11 +672,20 @@
                                 Orientation="Vertical"
                                 Background="#bba9c9">
 
+                        <Button Content="Reload"
+                                Height="35"
+                                FontSize="17"
+                                Foreground="White"
+                                Margin="0, 55, 0, 0"                               
+                                Style="{StaticResource DefaultButtonTheme}"
+                                coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Trash-Icon-32px.png"
+                                Command="{Binding RouteSegmentTransport_ReloadCommand}" />
+
                         <Button Content="Clear"
                                 Height="35"
                                 FontSize="17"
                                 Foreground="White"
-                                Margin="0, 145, 0, 0"
+                                Margin="0, 20, 0, 0"
                                 Style="{StaticResource DefaultButtonTheme}"
                                 coreProp:ImageIconProperties.IconSource="/Images/Icons/Global/Trash-Icon-32px.png"
                                 Command="{Binding RouteSegmentTransport_ClearForm}" />

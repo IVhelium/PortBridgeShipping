@@ -1,13 +1,12 @@
-﻿using PortBridgeShipping.Core;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows.Data;
+using System.Windows.Input;
+using PortBridgeShipping.Core;
 using PortBridgeShipping.Core.Collections.Enums;
 using PortBridgeShipping.Core.Collections.Enums.Filters;
 using PortBridgeShipping.MVVM.Models;
 using PortBridgeShipping.Services;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Security.Cryptography;
-using System.Windows.Data;
-using System.Windows.Input;
 
 namespace PortBridgeShipping.MVVM.ViewModels
 {
@@ -31,12 +30,14 @@ namespace PortBridgeShipping.MVVM.ViewModels
             RouteRouteSegment_UpdateCommand = new RelayCommand(RouteRouteSegmentUpdate, RouteRouteSegmentCanUpdate);
             RouteRouteSegment_RemoveCommand = new RelayCommand(RouteRouteSegmentRemove, RouteRouteSegmentCanRemove);
             RouteRouteSegment_ClearCommand = new RelayCommand(RouteRouteSegmentClearForm);
+            RouteRouteSegment_ReloadCommand = new RelayCommand(RouteRouteSegmentClearForm);
 
             // RouteSegment Transport
             RouteSegmentTransport_BindCommand = new RelayCommand(RouteSegmentTransportBind, RouteSegmentTransportCanBind);
             RouteSegmentTransport_UpdateCommand = new RelayCommand(RouteSegmentTransportUpdate, RouteSegmentTransportCanUpdate);
             RouteSegmentTransport_RemoveCommand = new RelayCommand(RouteSegmentTransportRemove, RouteSegmentTransportCanRemove);
             RouteSegmentTransport_ClearForm = new RelayCommand(RouteSegmentTransportClearForm);
+            RouteSegmentTransport_ReloadCommand = new RelayCommand(RouteSegmentTransportClearForm);
 
             #endregion
 
@@ -74,6 +75,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
         public RelayCommand RouteRouteSegment_UpdateCommand { get; set; }
         public RelayCommand RouteRouteSegment_RemoveCommand { get; set; }
         public RelayCommand RouteRouteSegment_ClearCommand { get; set; }
+        public RelayCommand RouteRouteSegment_ReloadCommand { get; set; }
 
 
         // RouteSegment Transport Commands
@@ -81,6 +83,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
         public RelayCommand RouteSegmentTransport_UpdateCommand { get; set; }
         public RelayCommand RouteSegmentTransport_RemoveCommand { get; set; }
         public RelayCommand RouteSegmentTransport_ClearForm { get; set; }
+        public RelayCommand RouteSegmentTransport_ReloadCommand { get; set; }
 
         #endregion
 
@@ -133,7 +136,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
                 if (transport != null) rst.Transport = transport;
 
                 RouteSegmentTransports.Add(rst);
-            }          
+            }
         }
 
         private void LoadSegmentsByRoute(int routeId)

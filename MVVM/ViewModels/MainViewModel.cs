@@ -1,6 +1,6 @@
-﻿using PortBridgeShipping.Core;
+﻿using System.Windows.Input;
+using PortBridgeShipping.Core;
 using PortBridgeShipping.Services;
-using System.Windows.Input;
 
 namespace PortBridgeShipping.MVVM.ViewModels
 {
