@@ -22,9 +22,6 @@
     </Window.DataContext>
 
     <Window.Resources>
-        <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
-            <view:HomeView />
-        </DataTemplate>
         <DataTemplate DataType="{x:Type viewModel:ContainersViewModel}">
             <view:ContainersView />
         </DataTemplate>
@@ -102,16 +99,6 @@
             </Grid.RowDefinitions>
 
             <DockPanel Grid.Row="0">
-                <RadioButton Content="Home"
-                             Height="45"
-                             DockPanel.Dock="Top"
-                             Foreground="White"
-                             FontSize="16"
-                             Style="{StaticResource MenuButtonTheme}"
-                             Command="{Binding HomeViewCommand}"
-                             GroupName="Menu_Radio_Btn"
-                             coreProp:ImageIconProperties.IconSource="/Images/Icons/MainWindow/Home-Icon-32px.png" />
-
                 <RadioButton Content="Containers"
                              Height="45"
                              DockPanel.Dock="Top"
@@ -120,6 +107,7 @@
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding ContainersViewCommand}"
                              GroupName="Menu_Radio_Btn"
+                             IsEnabled="{Binding IsLoggedIn}"
                              coreProp:ImageIconProperties.IconSource="/Images/Icons/MainWindow/Conteiner-Icon-32px.png" />
 
                 <RadioButton Content="Transports"
@@ -130,6 +118,7 @@
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding TransportsViewCommand}"
                              GroupName="Menu_Radio_Btn"
+                             IsEnabled="{Binding IsLoggedIn}"
                              coreProp:ImageIconProperties.IconSource="/Images/Icons/MainWindow/Ship-Icon-32px.png" />
 
                 <RadioButton Content="Routes"
@@ -140,6 +129,7 @@
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding RoutesViewCommand}"
                              GroupName="Menu_Radio_Btn"
+                             IsEnabled="{Binding IsLoggedIn}"
                              coreProp:ImageIconProperties.IconSource="/Images/Icons/MainWindow/Route-Icon-32px.png" />
 
                 <Label VerticalAlignment="Bottom"

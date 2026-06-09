@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using PortBridgeShipping.Core;
 using PortBridgeShipping.Services;
 
@@ -11,53 +12,48 @@ namespace PortBridgeShipping.MVVM.ViewModels
         private readonly TransportService _transportService = new();
         private readonly RouteService _routeService = new();
         private readonly ContainerService _containerService = new();
+        private readonly UserService _userService = new();
 
         #endregion
 
 
         public MainViewModel()
         {
-            HomeVM = new HomeViewModel();
             ContainersVM = new ContainersViewModel();
             TransportsVM = new TransportsViewModel();
             RoutesVM = new RoutesViewModel();
-            LogInVM = new LogInViewModel();
 
+            // Pass callback for successful login
+            LogInVM = new LogInViewModel(_userService, OnLoggedIn);
 
-            CurrentView = LogInVM;   // Set initial page
+            CurrentView = LogInVM;   // Start with login
             Title = "Welcome to Port Bridge Shipping";
-
+            IsLoggedIn = false;
 
             #region Initialize commands to switch views
-
-            HomeViewCommand = new RelayCommand(obj =>
-            {
-                CurrentView = HomeVM;
-                Title = "Home";
-            });
 
             ContainersViewCommand = new RelayCommand(
                 obj =>
                 {
                     CurrentView = ContainersVM;
-                    Title = "Containers Managment";
+                    Title = "Containers Management";
                 },
-                obj => HasRoute()
+                obj => IsLoggedIn && HasRoute()
             );
 
             TransportsViewCommand = new RelayCommand(obj =>
             {
                 CurrentView = TransportsVM;
-                Title = "Ships Managment";
-            });
+                Title = "Ships Management";
+            }, obj => IsLoggedIn);
 
             RoutesViewCommand = new RelayCommand(
                 obj =>
                 {
                     CurrentView = RoutesVM;
-                    Title = "Routes Managment";
+                    Title = "Routes Management";
                 },
-                obj => HasTransport()
+                obj => IsLoggedIn && HasTransport()
             );
 
             LogInViewCommand = new RelayCommand(obj =>
@@ -72,7 +68,6 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
         #region Commands
 
-        public RelayCommand HomeViewCommand { get; set; }
         public RelayCommand ContainersViewCommand { get; set; }
         public RelayCommand TransportsViewCommand { get; set; }
         public RelayCommand RoutesViewCommand { get; set; }
@@ -83,7 +78,6 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
         #region Views
 
-        public HomeViewModel HomeVM { get; set; }
         public ContainersViewModel ContainersVM { get; set; }
         public TransportsViewModel TransportsVM { get; set; }
         public RoutesViewModel RoutesVM { get; set; }
@@ -128,6 +122,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
                 _isLoggedIn = value;
                 OnPropertyChanged();
 
+                // Re-evaluate command CanExecute
                 CommandManager.InvalidateRequerySuggested();
             }
         }
@@ -144,7 +139,13 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
         public bool HasRoute()
         {
-            return _routeService.GetAllRoutes().Count != 0;  // If Route Count more than 0, return true
+            return _route_service_fallback();
+        }
+
+        // Helper - preserve original behavior while avoiding direct service usage mistakes
+        private bool _route_service_fallback()
+        {
+            return _routeService.GetAllRoutes().Count != 0;
         }
 
         public bool HasContainer()
@@ -153,5 +154,13 @@ namespace PortBridgeShipping.MVVM.ViewModels
         }
 
         #endregion
+
+        private void OnLoggedIn()
+        {
+            IsLoggedIn = true;
+            // After login, show containers page by default
+            CurrentView = ContainersVM;
+            Title = "Containers Management";
+        }
     }
 }
