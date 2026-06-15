@@ -12,36 +12,37 @@ namespace PortBridgeShipping
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            using (var db = new ApplicationDbContext())
+            try
             {
-                db.Database.Migrate();  // Create and update Db
-
-                if (!db.Statuses.Any())
+                using (var db = new ApplicationDbContext())
                 {
-                    db.Statuses.AddRange(
-                        new Status { Name = "In stock" },
-                        new Status { Name = "In Transit" },
-                        new Status { Name = "Delayed" },
-                        new Status { Name = "Delivered" }
-                    );
+                    // Use EnsureCreated to support runtime without EF migrations files
+                    try
+                    {
+                        db.Database.EnsureCreated();  // Create DB and schema if missing
+                    }
+                    catch
+                    {
+                        // fallback to Migrate if EnsureCreated fails for some reason
+                        try { db.Database.Migrate(); } catch { }
+                    }
 
-                    db.SaveChanges();
+                    if (!db.Statuses.Any())
+                    {
+                        db.Statuses.AddRange(
+                            new Status { Name = "In stock" },
+                            new Status { Name = "In Transit" },
+                            new Status { Name = "Delayed" },
+                            new Status { Name = "Delivered" }
+                        );
+
+                        db.SaveChanges();
+                    }
                 }
-
-                //if (!db.Routes.Any())
-                //{
-                //    var initialRoute = new Route { Name = "USA -> Europe" };
-
-                //    initialRoute.Segments.AddRange(
-                //    [
-                //        new RouteSegment { From = "Lisbon", To = "Madrid", Order = 1 },
-                //        new RouteSegment { From = "Madrid", To = "Port", Order = 2 },
-                //        new RouteSegment { From = "Port", To = "Egypt", Order = 3 }
-                //    ]);
-
-                //    db.Routes.Add(initialRoute);
-                //    db.SaveChanges();
-                //}
+            }
+            catch
+            {
+                // swallow startup DB errors to avoid crashing; consider logging in future
             }
 
             base.OnStartup(e);

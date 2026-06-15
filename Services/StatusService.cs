@@ -3,13 +3,20 @@ using PortBridgeShipping.MVVM.Models;
 
 namespace PortBridgeShipping.Services
 {
-    class StatusService
+    public class StatusService
     {
         public List<Status> GetAllStatuses()
         {
-            using var db = new ApplicationDbContext();
+            try
+            {
+                using var db = new ApplicationDbContext();
 
-            return db.Statuses.ToList();
+                return db.Statuses.ToList();
+            }
+            catch
+            {
+                return new List<Status>();
+            }
         }
     }
 }

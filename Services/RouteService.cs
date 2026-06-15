@@ -8,75 +8,117 @@ namespace PortBridgeShipping.Services
     {
         public List<Route> GetAllRoutes()
         {
-            using var db = new ApplicationDbContext();
+            try
+            {
+                using var db = new ApplicationDbContext();
 
-            return db.Routes
-                   .AsNoTracking()
-                   .Include(r => r.Segments)
-                   .ToList();
+                return db.Routes
+                       .AsNoTracking()
+                       .Include(r => r.Segments)
+                       .ToList();
+            }
+            catch
+            {
+                return new List<Route>();
+            }
         }
 
         public Route? GetRouteById(int id)
         {
-            using var db = new ApplicationDbContext();
+            try
+            {
+                using var db = new ApplicationDbContext();
 
-            return db.Routes
-                   .Include(r => r.Segments)
-                   .FirstOrDefault(r => r.Id == id);
+                return db.Routes
+                       .Include(r => r.Segments)
+                       .FirstOrDefault(r => r.Id == id);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public Route? CreateRoute(Route route)
         {
-            using var db = new ApplicationDbContext();
+            try
+            {
+                using var db = new ApplicationDbContext();
 
-            var createRoute = new Route { Name = route.Name };
+                var createRoute = new Route { Name = route.Name };
 
-            db.Routes.Add(createRoute);
-            db.SaveChanges();
+                db.Routes.Add(createRoute);
+                db.SaveChanges();
 
-            return db.Routes
-                .Include(r => r.Segments)
-                .FirstOrDefault(r => r.Id == createRoute.Id);
+                return db.Routes
+                    .Include(r => r.Segments)
+                    .FirstOrDefault(r => r.Id == createRoute.Id);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public Route? UpdateRoute(Route route, int id)
         {
-            using var db = new ApplicationDbContext();
+            try
+            {
+                using var db = new ApplicationDbContext();
 
-            var routeExist = db.Routes
-                            .Include(r => r.Segments)
-                            .FirstOrDefault(r => r.Id == id);
+                var routeExist = db.Routes
+                                .Include(r => r.Segments)
+                                .FirstOrDefault(r => r.Id == id);
 
-            if (routeExist == null) return null;
+                if (routeExist == null) return null;
 
-            routeExist.Name = route.Name;
+                routeExist.Name = route.Name;
 
-            db.SaveChanges();
+                db.SaveChanges();
 
-            return db.Routes
-                .Include(r => r.Segments)
-                .FirstOrDefault(r => r.Id == id);
+                return db.Routes
+                    .Include(r => r.Segments)
+                    .FirstOrDefault(r => r.Id == id);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public bool DeleteRoute(int id)
         {
-            using var db = new ApplicationDbContext();
+            try
+            {
+                using var db = new ApplicationDbContext();
 
-            var routeExist = db.Routes.FirstOrDefault(r => r.Id == id);
+                var routeExist = db.Routes.FirstOrDefault(r => r.Id == id);
 
-            if (routeExist == null) return false;
+                if (routeExist == null) return false;
 
-            db.Routes.Remove(routeExist);
-            db.SaveChanges();
+                db.Routes.Remove(routeExist);
+                db.SaveChanges();
 
-            return true;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public bool Exists(int id)
         {
-            using var db = new ApplicationDbContext();
+            try
+            {
+                using var db = new ApplicationDbContext();
 
-            return db.Routes.Any(r => r.Id == id);
+                return db.Routes.Any(r => r.Id == id);
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

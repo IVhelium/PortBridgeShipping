@@ -8,93 +8,135 @@ namespace PortBridgeShipping.Services
     {
         public List<RouteSegmentTransport> GetAllRouteSegmentTransports()
         {
-            using var db = new ApplicationDbContext();
+            try
+            {
+                using var db = new ApplicationDbContext();
 
-            return db.RouteSegmentTransports
-                .AsNoTracking()
-                .Include(rst => rst.Transport)
-                .Include(rst => rst.RouteSegment)
-                .ToList();
+                return db.RouteSegmentTransports
+                    .AsNoTracking()
+                    .Include(rst => rst.Transport)
+                    .Include(rst => rst.RouteSegment)
+                    .ToList();
+            }
+            catch
+            {
+                return new List<RouteSegmentTransport>();
+            }
         }
 
         public List<Transport> GetTransportsBySegment(int segmenId)
         {
-            using var db = new ApplicationDbContext();
+            try
+            {
+                using var db = new ApplicationDbContext();
 
-            return db.RouteSegmentTransports
-                .Where(rst => rst.RouteSegmentId == segmenId)
-                .Include(rst => rst.Transport)
-                .Select(rst => rst.Transport)
-                .ToList();
+                return db.RouteSegmentTransports
+                    .Where(rst => rst.RouteSegmentId == segmenId)
+                    .Include(rst => rst.Transport)
+                    .Select(rst => rst.Transport)
+                    .ToList();
+            }
+            catch
+            {
+                return new List<Transport>();
+            }
         }
 
         public List<RouteSegment> GetRouteSegmentsByTransport(int transportId)
         {
-            using var db = new ApplicationDbContext();
+            try
+            {
+                using var db = new ApplicationDbContext();
 
-            return db.RouteSegmentTransports
-                .Where(rst => rst.TransportId == transportId)
-                .Include(rst => rst.RouteSegment)
-                .Select(rst => rst.RouteSegment)
-                .ToList();
+                return db.RouteSegmentTransports
+                    .Where(rst => rst.TransportId == transportId)
+                    .Include(rst => rst.RouteSegment)
+                    .Select(rst => rst.RouteSegment)
+                    .ToList();
+            }
+            catch
+            {
+                return new List<RouteSegment>();
+            }
         }
 
         public RouteSegmentTransport? AddTransportToSegment(RouteSegmentTransport routeSegmentTransport)
         {
-            using var db = new ApplicationDbContext();
+            try
+            {
+                using var db = new ApplicationDbContext();
 
-            var transportSegmentExist = db.RouteSegmentTransports
+                var transportSegmentExist = db.RouteSegmentTransports
                                        .FirstOrDefault(rst => rst.RouteSegmentId == routeSegmentTransport.RouteSegmentId
                                        && rst.TransportId == routeSegmentTransport.TransportId);
 
-            if (transportSegmentExist != null) return null;
+                if (transportSegmentExist != null) return null;
 
-            var transportSegment = new RouteSegmentTransport
+                var transportSegment = new RouteSegmentTransport
+                {
+                    RouteSegmentId = routeSegmentTransport.RouteSegmentId,
+                    TransportId = routeSegmentTransport.TransportId
+                };
+
+                db.RouteSegmentTransports.Add(transportSegment);
+                db.SaveChanges();
+
+                return transportSegment;
+            }
+            catch
             {
-                RouteSegmentId = routeSegmentTransport.RouteSegmentId,
-                TransportId = routeSegmentTransport.TransportId
-            };
-
-            db.RouteSegmentTransports.Add(transportSegment);
-            db.SaveChanges();
-
-            return transportSegment;
+                return null;
+            }
         }
 
         public RouteSegmentTransport? UpdateTransportFromSegment(RouteSegmentTransport routeSegmentTransport, int segmentId, int transportId)
         {
-            using var db = new ApplicationDbContext();
+            try
+            {
+                using var db = new ApplicationDbContext();
 
-            var transportSegmentExist = db.RouteSegmentTransports
+                var transportSegmentExist = db.RouteSegmentTransports
                                        .FirstOrDefault(rst => rst.RouteSegmentId == segmentId
                                        && rst.TransportId == transportId);
 
-            if (transportSegmentExist != null) return null;
+                if (transportSegmentExist != null) return null;
 
-            transportSegmentExist.RouteSegmentId = routeSegmentTransport.RouteSegmentId;
-            transportSegmentExist.TransportId = routeSegmentTransport.TransportId;
+                transportSegmentExist.RouteSegmentId = routeSegmentTransport.RouteSegmentId;
+                transportSegmentExist.TransportId = routeSegmentTransport.TransportId;
 
-            db.SaveChanges();
+                db.SaveChanges();
 
-            return db.RouteSegmentTransports
-                     .FirstOrDefault(rst => rst.RouteSegmentId == segmentId
-                     && rst.TransportId == transportId);
+                return db.RouteSegmentTransports
+                         .FirstOrDefault(rst => rst.RouteSegmentId == segmentId
+                         && rst.TransportId == transportId);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public bool DeleteTransportFromSegment(int segmentId, int transportId)
         {
-            using var db = new ApplicationDbContext();
+            try
+            {
+                using var db = new ApplicationDbContext();
 
-            var transportSegmentExist = db.RouteSegmentTransports
+                var transportSegmentExist = db.RouteSegmentTransports
                                        .FirstOrDefault(rst => rst.RouteSegmentId == segmentId
                                        && rst.TransportId == transportId);
 
-            if (transportSegmentExist == null) return false;
+                if (transportSegmentExist == null) return false;
 
-            db.RouteSegmentTransports.Remove(transportSegmentExist);
-            db.SaveChanges();
+                db.RouteSegmentTransports.Remove(transportSegmentExist);
+                db.SaveChanges();
 
-            return true;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

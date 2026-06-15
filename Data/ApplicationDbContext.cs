@@ -13,6 +13,7 @@ namespace PortBridgeShipping.Data
         public DbSet<RouteSegment> RouteSegments { get; set; }
         public DbSet<RouteSegmentTransport> RouteSegmentTransports { get; set; }
         public DbSet<Status> Statuses { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -84,6 +85,11 @@ namespace PortBridgeShipping.Data
             // FK RouteSegmentId and TransportId
             modelBuilder.Entity<RouteSegmentTransport>()
                 .HasKey(rst => new { rst.RouteSegmentId, rst.TransportId });
+
+            // Unique Username for Users
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Username)
+                .IsUnique();
 
             #endregion
 

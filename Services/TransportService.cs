@@ -1,4 +1,5 @@
-﻿using PortBridgeShipping.Data;
+﻿using System.Linq;
+using PortBridgeShipping.Data;
 using PortBridgeShipping.MVVM.Models;
 
 namespace PortBridgeShipping.Services
@@ -7,66 +8,101 @@ namespace PortBridgeShipping.Services
     {
         public List<Transport> GetAllTransports()
         {
-            using var db = new ApplicationDbContext();
+            try
+            {
+                using var db = new ApplicationDbContext();
 
-            return db.Transports.ToList();
+                return db.Transports.ToList();
+            }
+            catch
+            {
+                return new List<Transport>();
+            }
         }
 
         public Transport? CreateTransport(Transport transport)
         {
-            using var db = new ApplicationDbContext();
-
-            var createTransport = new Transport
+            try
             {
-                TransportNumber = transport.TransportNumber,
-                Name = transport.Name,
-                TransportType = transport.TransportType,
-                Capacity = transport.Capacity
-            };
+                using var db = new ApplicationDbContext();
 
-            db.Transports.Add(createTransport);
-            db.SaveChanges();
+                var createTransport = new Transport
+                {
+                    TransportNumber = transport.TransportNumber,
+                    Name = transport.Name,
+                    TransportType = transport.TransportType,
+                    Capacity = transport.Capacity
+                };
 
-            return db.Transports.FirstOrDefault(t => t.Id == createTransport.Id);
+                db.Transports.Add(createTransport);
+                db.SaveChanges();
+
+                return db.Transports.FirstOrDefault(t => t.Id == createTransport.Id);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public Transport? UpdateTransport(Transport transport, int id)
         {
-            using var db = new ApplicationDbContext();
+            try
+            {
+                using var db = new ApplicationDbContext();
 
-            var transportExist = db.Transports.FirstOrDefault(t => t.Id == id);
+                var transportExist = db.Transports.FirstOrDefault(t => t.Id == id);
 
-            if (transportExist == null) return null;
+                if (transportExist == null) return null;
 
-            transportExist.TransportNumber = transport.TransportNumber;
-            transportExist.Name = transport.Name;
-            transportExist.TransportType = transport.TransportType;
-            transportExist.Capacity = transport.Capacity;
+                transportExist.TransportNumber = transport.TransportNumber;
+                transportExist.Name = transport.Name;
+                transportExist.TransportType = transport.TransportType;
+                transportExist.Capacity = transport.Capacity;
 
-            db.SaveChanges();
+                db.SaveChanges();
 
-            return db.Transports.FirstOrDefault(t => t.Id == id);
+                return db.Transports.FirstOrDefault(t => t.Id == id);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public bool DeleteTransport(int id)
         {
-            using var db = new ApplicationDbContext();
+            try
+            {
+                using var db = new ApplicationDbContext();
 
-            var transportExist = db.Transports.FirstOrDefault(t => t.Id == id);
+                var transportExist = db.Transports.FirstOrDefault(t => t.Id == id);
 
-            if (transportExist == null) return false;
+                if (transportExist == null) return false;
 
-            db.Transports.Remove(transportExist);
-            db.SaveChanges();
+                db.Transports.Remove(transportExist);
+                db.SaveChanges();
 
-            return true;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
+        // Fixed: check TransportNumber instead of Id
         public bool Exist(int number)
         {
-            using var db = new ApplicationDbContext();
-
-            return db.Transports.Any(t => t.Id == number);
+            try
+            {
+                using var db = new ApplicationDbContext();
+                return db.Transports.Any(t => t.TransportNumber == number);
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

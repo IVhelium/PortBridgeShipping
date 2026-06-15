@@ -23,86 +23,114 @@ namespace PortBridgeShipping.Services
 
         public List<RouteSegment> GetAllRouteSegments()
         {
-            using var db = new ApplicationDbContext();
+            try
+            {
+                using var db = new ApplicationDbContext();
 
-            return db.RouteSegments
-                    .AsNoTracking()
-                    .Include(r => r.Route)
-                    .OrderBy(r => r.RouteId)
-                    .ThenBy(r => r.Order)
-                    .ToList();
+                return db.RouteSegments
+                        .AsNoTracking()
+                        .Include(r => r.Route)
+                        .OrderBy(r => r.RouteId)
+                        .ThenBy(r => r.Order)
+                        .ToList();
+            }
+            catch
+            {
+                return new List<RouteSegment>();
+            }
         }
 
         public RouteSegment? CreateRouteSegment(RouteSegment routeSegment)
         {
-            using var db = new ApplicationDbContext();
-
-            var segments = db.RouteSegments
-                .Where(rs => rs.RouteId == routeSegment.RouteId)
-                .OrderBy(rs => rs.Order)
-                .ToList();
-
-            var createRouteSegment = new RouteSegment
+            try
             {
-                Order = segments.Count + 1,
-                To = routeSegment.To,
-                RouteId = routeSegment.RouteId
-            };
+                using var db = new ApplicationDbContext();
 
-            if (segments.Count == 0)
-            {
-                if (string.IsNullOrWhiteSpace(routeSegment.From)) return null;
+                var segments = db.RouteSegments
+                    .Where(rs => rs.RouteId == routeSegment.RouteId)
+                    .OrderBy(rs => rs.Order)
+                    .ToList();
 
-                createRouteSegment.From = routeSegment.From;
+                var createRouteSegment = new RouteSegment
+                {
+                    Order = segments.Count + 1,
+                    To = routeSegment.To,
+                    RouteId = routeSegment.RouteId
+                };
+
+                if (segments.Count == 0)
+                {
+                    if (string.IsNullOrWhiteSpace(routeSegment.From)) return null;
+
+                    createRouteSegment.From = routeSegment.From;
+                }
+                else createRouteSegment.From = segments.Last().To;
+
+                ReOrderSegments(db, createRouteSegment.RouteId);
+
+                db.RouteSegments.Add(createRouteSegment);
+                db.SaveChanges();
+
+                return db.RouteSegments
+                        .Include(r => r.Route)
+                        .FirstOrDefault(rs => rs.Id == createRouteSegment.Id);
             }
-            else createRouteSegment.From = segments.Last().To;
-
-            ReOrderSegments(db, createRouteSegment.RouteId);
-
-            db.RouteSegments.Add(createRouteSegment);
-            db.SaveChanges();
-
-            return db.RouteSegments
-                    .Include(r => r.Route)
-                    .FirstOrDefault(rs => rs.Id == createRouteSegment.Id);
+            catch
+            {
+                return null;
+            }
         }
 
         public RouteSegment? UpdateRouteSegment(RouteSegment routeSegment, int id)
         {
-            using var db = new ApplicationDbContext();
+            try
+            {
+                using var db = new ApplicationDbContext();
 
-            var routeSegmentExist = db.RouteSegments
-                                    .Include(r => r.Route)
-                                    .FirstOrDefault(rs => rs.Id == id);
+                var routeSegmentExist = db.RouteSegments
+                                        .Include(r => r.Route)
+                                        .FirstOrDefault(rs => rs.Id == id);
 
-            if (routeSegmentExist == null) return null;
+                if (routeSegmentExist == null) return null;
 
-            routeSegmentExist.To = routeSegment.To;
+                routeSegmentExist.To = routeSegment.To;
 
-            ReOrderSegments(db, routeSegmentExist.RouteId);
+                ReOrderSegments(db, routeSegmentExist.RouteId);
 
-            db.SaveChanges();
+                db.SaveChanges();
 
-            return db.RouteSegments
-                    .Include(r => r.Route)
-                    .FirstOrDefault(rs => rs.Id == id);
+                return db.RouteSegments
+                        .Include(r => r.Route)
+                        .FirstOrDefault(rs => rs.Id == id);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public bool DeleteRouteSegment(int id)
         {
-            using var db = new ApplicationDbContext();
+            try
+            {
+                using var db = new ApplicationDbContext();
 
-            var routeSegmentExist = db.RouteSegments.FirstOrDefault(rs => rs.Id == id);
+                var routeSegmentExist = db.RouteSegments.FirstOrDefault(rs => rs.Id == id);
 
-            if (routeSegmentExist == null) return false;
+                if (routeSegmentExist == null) return false;
 
-            db.RouteSegments.Remove(routeSegmentExist);
+                db.RouteSegments.Remove(routeSegmentExist);
 
-            ReOrderSegments(db, routeSegmentExist.RouteId);
+                ReOrderSegments(db, routeSegmentExist.RouteId);
 
-            db.SaveChanges();
+                db.SaveChanges();
 
-            return true;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

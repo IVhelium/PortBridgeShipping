@@ -1,82 +1,60 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+using PortBridgeShipping.Data;
+using PortBridgeShipping.MVVM.Models;
 
 namespace PortBridgeShipping.Services
 {
     public class UserService
     {
-        private readonly string _folder;
-        private readonly string _filePath;
+        private readonly string _logPath;
+        public string? LastError { get; private set; }
 
         public UserService()
         {
-            _folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PortBridgeShipping");
-            Directory.CreateDirectory(_folder);
-            _filePath = Path.Combine(_folder, "users.dat"); // line-based storage using StreamReader/StreamWriter
-        }
-
-        private record UserRecord(string Username, string Salt, string PasswordHash);
-
-        private List<UserRecord> LoadUsers()
-        {
-            var result = new List<UserRecord>();
-            if (!File.Exists(_filePath)) return result;
-
+            // Ensure log path
+            var logFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PortBridgeShipping");
             try
             {
-                using var fs = new FileStream(_filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                using var sr = new StreamReader(fs, Encoding.UTF8);
-
-                string? line;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    if (string.IsNullOrWhiteSpace(line)) continue;
-
-                    // expected format: username|salt|hash
-                    var parts = line.Split('|');
-                    if (parts.Length != 3) continue;
-
-                    var username = parts[0];
-                    var salt = parts[1];
-                    var hash = parts[2];
-
-                    result.Add(new UserRecord(username, salt, hash));
-                }
+                Directory.CreateDirectory(logFolder);
             }
-            catch
-            {
-                // return empty list on error to keep service usable
-                return new List<UserRecord>();
-            }
+            catch { }
 
-            return result;
-        }
+            _logPath = Path.Combine(logFolder, "user_service.log");
 
-        private void SaveUsers(List<UserRecord> users)
-        {
+            // Ensure DB and schema exist
             try
             {
-                var tempPath = _filePath + ".tmp";
-                using (var fs = new FileStream(tempPath, FileMode.Create, FileAccess.Write, FileShare.None))
-                using (var sw = new StreamWriter(fs, Encoding.UTF8))
-                {
-                    foreach (var u in users)
-                    {
-                        // Keep simple pipe-delimited, disallow pipe/newline in usernames at creation
-                        sw.WriteLine($"{u.Username}|{u.Salt}|{u.PasswordHash}");
-                    }
-                }
+                using var db = new ApplicationDbContext();
+                db.Database.EnsureCreated();
 
-                // Replace atomically when possible
-                File.Copy(tempPath, _filePath, true);
-                File.Delete(tempPath);
+                // Make sure Users table exists even if migrations weren't applied
+                try
+                {
+                    // Create table if not exists - SQLite dialect
+                    db.Database.ExecuteSqlRaw(@"CREATE TABLE IF NOT EXISTS Users (
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        Username TEXT NOT NULL,
+                        Salt TEXT NOT NULL,
+                        PasswordHash TEXT NOT NULL
+                    );");
+
+                    // Create unique index on username (case-sensitive by default) - create case-insensitive index using COLLATE NOCASE
+                    db.Database.ExecuteSqlRaw(@"CREATE UNIQUE INDEX IF NOT EXISTS IX_Users_Username ON Users(Username COLLATE NOCASE);");
+                }
+                catch (Exception ex)
+                {
+                    try { File.AppendAllText(_logPath, $"[{DateTime.UtcNow}] SQL ensure table/index failed: {ex}\n"); } catch { }
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                // swallow IO exceptions — consider logging in a real app
+                LastError = "Database initialization failed.";
+                try { File.AppendAllText(_logPath, $"[{DateTime.UtcNow}] EnsureCreated failed: {ex}\n"); } catch { }
             }
         }
 
@@ -97,35 +75,159 @@ namespace PortBridgeShipping.Services
 
         public bool CreateUser(string username, string password)
         {
+            LastError = null;
+
             username = (username ?? string.Empty).Trim();
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password)) return false;
+            if (string.IsNullOrEmpty(username))
+            {
+                LastError = "Username is required.";
+                return false;
+            }
 
-            // Disallow delimiter/newline characters in username to preserve file format
-            if (username.Contains('|') || username.Contains('\n') || username.Contains('\r')) return false;
+            if (string.IsNullOrEmpty(password) || password.Length < 8)
+            {
+                LastError = "Password must be at least 8 characters.";
+                return false;
+            }
 
-            var users = LoadUsers();
-            if (users.Exists(u => string.Equals(u.Username, username, StringComparison.OrdinalIgnoreCase))) return false;
+            // keep prior restriction from flat-file approach
+            if (username.Contains('|') || username.Contains('\n') || username.Contains('\r'))
+            {
+                LastError = "Username contains invalid characters.";
+                return false;
+            }
 
-            var salt = GenerateSalt();
-            var hash = ComputeHash(password, salt);
-            users.Add(new UserRecord(username, salt, hash));
-            SaveUsers(users);
-            return true;
+            try
+            {
+                using var db = new ApplicationDbContext();
+
+                // Ensure latest schema available (safe no-op if already applied)
+                try { db.Database.Migrate(); } catch (Exception ex) { File.AppendAllText(_logPath, $"[{DateTime.UtcNow}] Migrate failed: {ex}\n"); }
+
+                // Use a case-insensitive existence check via raw SQL/EF to avoid translation issues
+                try
+                {
+                    var exists = db.Users.FromSqlRaw("SELECT * FROM Users WHERE Username = {0} COLLATE NOCASE", username).AsNoTracking().Any();
+                    if (exists)
+                    {
+                        LastError = "Username already exists.";
+                        return false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Fallback to LINQ check in-memory
+                    try
+                    {
+                        var existingUsernames = db.Users.AsNoTracking().Select(u => u.Username).ToList();
+                        if (existingUsernames.Any(n => string.Equals(n, username, StringComparison.OrdinalIgnoreCase)))
+                        {
+                            LastError = "Username already exists.";
+                            return false;
+                        }
+                    }
+                    catch (Exception inner)
+                    {
+                        File.AppendAllText(_logPath, $"[{DateTime.UtcNow}] Existence check failed: {ex} | {inner}\n");
+                        LastError = "Unable to verify username uniqueness.";
+                        return false;
+                    }
+                }
+
+                var salt = GenerateSalt();
+                var hash = ComputeHash(password, salt);
+
+                var user = new User
+                {
+                    Username = username,
+                    Salt = salt,
+                    PasswordHash = hash
+                };
+
+                db.Users.Add(user);
+                db.SaveChanges();
+                return true;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                LastError = "Database update error during registration.";
+                try { File.AppendAllText(_logPath, $"[{DateTime.UtcNow}] DbUpdateException in CreateUser: {dbEx}\n"); } catch { }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                LastError = "Unexpected error during registration.";
+                try { File.AppendAllText(_logPath, $"[{DateTime.UtcNow}] Exception in CreateUser: {ex}\n"); } catch { }
+                return false;
+            }
         }
 
         public bool ValidateCredentials(string username, string password)
         {
+            LastError = null;
+
             username = (username ?? string.Empty).Trim();
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password)) return false;
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                LastError = "Username and password are required.";
+                return false;
+            }
 
-            var users = LoadUsers();
-            var user = users.Find(u => string.Equals(u.Username, username, StringComparison.OrdinalIgnoreCase));
-            if (user == null) return false;
+            try
+            {
+                using var db = new ApplicationDbContext();
+                var lower = username.ToLowerInvariant();
+                var user = db.Users.AsNoTracking().FirstOrDefault(u => u.Username.ToLower() == lower);
+                if (user == null || string.IsNullOrEmpty(user.Salt) || string.IsNullOrEmpty(user.PasswordHash))
+                {
+                    LastError = "Invalid username or password.";
+                    return false;
+                }
 
-            var hash = ComputeHash(password, user.Salt);
-            return string.Equals(hash, user.PasswordHash, StringComparison.OrdinalIgnoreCase);
+                var computedHash = ComputeHash(password, user.Salt);
+
+                try
+                {
+                    var a = Convert.FromHexString(computedHash);
+                    var b = Convert.FromHexString(user.PasswordHash);
+                    if (a.Length != b.Length)
+                    {
+                        LastError = "Invalid username or password.";
+                        return false;
+                    }
+
+                    var equal = CryptographicOperations.FixedTimeEquals(a, b);
+                    if (!equal) LastError = "Invalid username or password.";
+                    return equal;
+                }
+                catch
+                {
+                    var eq = string.Equals(computedHash, user.PasswordHash, StringComparison.OrdinalIgnoreCase);
+                    if (!eq) LastError = "Invalid username or password.";
+                    return eq;
+                }
+            }
+            catch (Exception ex)
+            {
+                LastError = "Unexpected error during authentication.";
+                try { File.AppendAllText(_logPath, $"[{DateTime.UtcNow}] Exception in ValidateCredentials: {ex}\n"); } catch { }
+                return false;
+            }
         }
 
-        public bool HasAnyUsers() => LoadUsers().Count > 0;
+        public bool HasAnyUsers()
+        {
+            try
+            {
+                using var db = new ApplicationDbContext();
+                return db.Users.Any();
+            }
+            catch (Exception ex)
+            {
+                LastError = "Error checking users.";
+                try { File.AppendAllText(_logPath, $"[{DateTime.UtcNow}] Exception in HasAnyUsers: {ex}\n"); } catch { }
+                return false;
+            }
+        }
     }
 }
