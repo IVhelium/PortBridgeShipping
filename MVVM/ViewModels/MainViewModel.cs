@@ -11,6 +11,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
 
         private readonly TransportService _transportService = new();
         private readonly RouteService _routeService = new();
+        private readonly ContainerService _container_service = new();
         private readonly ContainerService _containerService = new();
         private readonly UserService _userService = new();
 
@@ -22,6 +23,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
             ContainersVM = new ContainersViewModel();
             TransportsVM = new TransportsViewModel();
             RoutesVM = new RoutesViewModel();
+            StatisticsVM = new StatisticsViewModel();
 
             // Pass callback for successful login
             LogInVM = new LogInViewModel(_userService, OnLoggedIn);
@@ -56,6 +58,14 @@ namespace PortBridgeShipping.MVVM.ViewModels
                 obj => IsLoggedIn && HasTransport()
             );
 
+            StatisticsViewCommand = new RelayCommand(obj =>
+            {
+                CurrentView = StatisticsVM;
+                Title = "Statistics";
+                // refresh stats when opening
+                StatisticsVM.LoadStatistics();
+            }, obj => IsLoggedIn);
+
             LogInViewCommand = new RelayCommand(obj =>
             {
                 CurrentView = LogInVM;
@@ -71,6 +81,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
         public RelayCommand ContainersViewCommand { get; set; }
         public RelayCommand TransportsViewCommand { get; set; }
         public RelayCommand RoutesViewCommand { get; set; }
+        public RelayCommand StatisticsViewCommand { get; set; }
         public RelayCommand LogInViewCommand { get; set; }
 
         #endregion
@@ -82,6 +93,7 @@ namespace PortBridgeShipping.MVVM.ViewModels
         public TransportsViewModel TransportsVM { get; set; }
         public RoutesViewModel RoutesVM { get; set; }
         public LogInViewModel LogInVM { get; set; }
+        public StatisticsViewModel StatisticsVM { get; set; }
 
         #endregion
 

@@ -34,6 +34,9 @@
         <DataTemplate DataType="{x:Type viewModel:LogInViewModel}">
             <view:LogInView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:StatisticsViewModel}">
+            <view:StatisticsView />
+        </DataTemplate>
     </Window.Resources>
 
     <Grid Background="#c8b2d4"
@@ -128,6 +131,17 @@
                              FontSize="16"
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding RoutesViewCommand}"
+                             GroupName="Menu_Radio_Btn"
+                             IsEnabled="{Binding IsLoggedIn}"
+                             coreProp:ImageIconProperties.IconSource="/Images/Icons/MainWindow/Route-Icon-32px.png" />
+
+                <RadioButton Content="Statistics"
+                             Height="45"
+                             DockPanel.Dock="Top"
+                             Foreground="White"
+                             FontSize="16"
+                             Style="{StaticResource MenuButtonTheme}"
+                             Command="{Binding StatisticsViewCommand}"
                              GroupName="Menu_Radio_Btn"
                              IsEnabled="{Binding IsLoggedIn}"
                              coreProp:ImageIconProperties.IconSource="/Images/Icons/MainWindow/Route-Icon-32px.png" />
